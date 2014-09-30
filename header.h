@@ -15,12 +15,12 @@ public :
 	double getVolume() {return volume_;}
 } ;
 
-class Scale {
+class Chord {
 	Note note_;
 	Mode mode_;
 	
 public :
-	Scale(Note note, Mode mode) {
+	Chord(Note note, Mode mode) {
 		note_ = note;
 		mode_ = mode;
 	}
