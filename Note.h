@@ -17,6 +17,7 @@ public :
 	Note();
 	Note(int frequency, double duration, double volume) {frequency_ = frequency;	duration_ = duration; volume_ = volume;}
 	double getRealFrequency() {return pow(2, 1.0 * (frequency_ - 9) / 12)*REAL_FREQUENCY;}
+	double getFrequency() {return frequency_ ;}
 	double getDuration() {return duration_ ;}
 	double getVolume() {return volume_;}
 } ;
@@ -31,6 +32,7 @@ public :
 		mode_ = mode;
 	}
 	Mode getMode() {return mode_;}
+	Note getNote() {return note_;}
 } ;
 
 #endif
