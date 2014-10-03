@@ -2,6 +2,7 @@
 #include "Note.h"
 #include <cassert>
 #include <cstdio>
+#include <cmath>
 
 Track::Track()
 {
@@ -13,6 +14,15 @@ Track::Track(const std::vector<double>& wave)
 	wave_.resize(wave.size());
 	for (int i = 0; i < wave.size(); i++)
 		wave_[i] = wave[i];
+}
+
+Track::Track(const std::pair(Note, double)& element)
+{
+	wave_.resize((int)(element.first.getDuration()));
+	double frequency = element.first.getRealFrequency();
+	frequency = M_PI * 2.0 * frequency / SAMPLE_RATE;
+	for (int i = 0; i < (int)wave_.size(); i++)
+		wave_[i] = sin(frqeuency * i);
 }
 
 //Track::Track(const std::vector<std::pair(Note, double> >& sequence) {} -ToDo

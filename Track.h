@@ -11,6 +11,7 @@ class Track
 public:
 	Track();
 	Track(const std::vector<double>& wave);
+	Track(const std::pair<Note, double>& element);
 //	Track(const std::vector<std::pair<Note, double> >& sequence); - ToDo
 	int getLength() const;
 	double getValue(int index) const;
