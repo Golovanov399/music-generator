@@ -31,6 +31,7 @@ public :
 		mode_ = mode;
 	}
 	Mode getMode() {return mode_;}
+	Note getNote() {return note_;}
 } ;
 
 #endif
