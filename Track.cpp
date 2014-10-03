@@ -16,16 +16,24 @@ Track::Track(const std::vector<double>& wave)
 		wave_[i] = wave[i];
 }
 
-Track::Track(const std::pair(Note, double)& element)
+Track::Track(const Note& element)
 {
 	wave_.resize((int)(element.first.getDuration()));
 	double frequency = element.first.getRealFrequency();
 	frequency = M_PI * 2.0 * frequency / SAMPLE_RATE;
 	for (int i = 0; i < (int)wave_.size(); i++)
-		wave_[i] = sin(frqeuency * i);
+		wave_[i] = sin(frequency * i);
 }
 
-//Track::Track(const std::vector<std::pair(Note, double> >& sequence) {} -ToDo
+Track::Track(const std::vector<std::pair(Note, double> >& sequence) // naive constructor;
+{
+	wave_.clear();
+	for (int i = 0; i < (int)sequence.size(); i++)
+	{
+		int offset = (int)(sequence[i].second);
+		addToSelf((int)wave_.size() - offset, Track(sequence[i].first));
+	}
+}
 
 int Track::getLength() const
 {
@@ -42,7 +50,7 @@ Track Track::add(int offset, const Track& delta) const
 {
 	assert(offset <= (int)wave_.size());
 	std::vector<double> result;
-	result.resize(wave_.size() + delta.getLength() - offset);
+	result.resize(min((int)wave_.size(), (int)wave_.size() + delta.getLength() - offset));
 	for (int i = 0; i < (int)result.size(); i++)
 	{
 		result[i] = (i < (int)wave_.size() ? wave_[i] : 0.0);
@@ -50,6 +58,16 @@ Track Track::add(int offset, const Track& delta) const
 			result[i] += delta.getValue(i - (wave_.size() - offset));
 	}
 	return Track(result);
+}
+
+void Track::addToSelf(int offset, const Track& delta)
+{
+	assert(offset <= (int)wave_.size());
+	if (delta.getLength() - offset > 0)
+		wave_.resize((int)wave_.size + delta.getLength() - offset);
+	for (int i = 0; i < (int)wave_.size() - offset; i++)
+		wave_[i] = (i < (int)wave_.size() ? wave_[i] + delta[i - (wave_.size() - offset) :
+						delta[i - (wave_.size() - offset));
 }
 
 void Track::drop() const
