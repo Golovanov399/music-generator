@@ -1,3 +1,7 @@
+#ifndef __Note__
+
+#define __Note__
+
 const double REAL_FREQUENCY = 440.0;
 const double MAX_AMPLITUDE = 100.0;
 const double MIN_AMPLITUDE = 0.0;
@@ -28,3 +32,5 @@ public :
 	}
 	Mode getMode() {return mode_;}
 } ;
+
+#endif
