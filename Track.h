@@ -3,6 +3,7 @@
 #define __Track__
 
 #include <vector>
+#include "Note.h"
 
 class Track
 {
