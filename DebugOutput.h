@@ -32,8 +32,8 @@ void printChordSequence(const std::vector<std::pair<Chord, double> >& ChordSeque
 	int SequenceLength = ChordSequence.size();
 	FILE* OutputFile = fopen(FileName, "w");
 	for (int i = 0; i < SequenceLength; ++i) {
-		Note CurrentNote = ChordSequence[i].first.getNote();
-		fprintf(OutputFile, "%d %f %f %s %f\n", CurrentNote.getFrequency(), CurrentNote.getDuration(), CurrentNote.getVolume(), getModeName(ChordSequence[i].first.getMode()), ChordSequence[i].second);
+		Chord CurrentChord = ChordSequence[i].first;
+		fprintf(OutputFile, "%d %f %f %s %f\n", CurrentChord.getFrequency(), CurrentChord.getDuration(), CurrentChord.getVolume(), getModeName(CurrentChord.getMode()), ChordSequence[i].second);
 	}
 	return;
 }
