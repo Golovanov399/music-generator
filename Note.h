@@ -18,11 +18,11 @@ class Note {
 	double volume_;
 	
 public :
-	Note(){frequency_ = 440; duration_ = 1; volume_ = MAX_AMPLITUDE;};
+	Note() {frequency_ = 440; duration_ = 1; volume_ = MAX_AMPLITUDE;};
 	Note(int frequency, double duration = 1, double volume = MAX_AMPLITUDE) {frequency_ = frequency;	duration_ = duration; volume_ = volume;}
-	double getRealFrequency() const {return pow(2, 1.0 * (frequency_ - 9) / 12)*REAL_FREQUENCY;}
-	double getFrequency() const {return frequency_ ;}
-	double getDuration() const {return duration_ ;}
+	double getRealFrequency() const {return pow(2, 1.0 * (frequency_ - 9) / 12) * REAL_FREQUENCY;}
+	double getFrequency() const {return frequency_;}
+	double getDuration() const {return duration_;}
 	double getVolume() const {return volume_;}
 } ;
 
@@ -37,6 +37,9 @@ public :
 	}
 	Mode getMode() const {return mode_;}
 	Note getNote() const {return note_;}
+	int getFrequency() const {return note_.getFrequency();}
+	double getDuration() const {return note_.getDuration();}
+	double getVolume() const {return note_.getVolume();}
 } ;
 
 #endif
