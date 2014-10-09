@@ -4,6 +4,9 @@
 #include <cstdio>
 #include <cmath>
 
+const int SAMPLE_RATE = 44100;
+const double SECONDS_IN_BAR = 1.0;
+
 Track::Track()
 {
 	wave_.clear();
@@ -18,11 +21,11 @@ Track::Track(const std::vector<double>& wave)
 
 Track::Track(const Note& element)
 {
-	wave_.resize((int)(element.first.getDuration()));
-	double frequency = element.first.getRealFrequency();
-	frequency = M_PI * 2.0 * frequency / SAMPLE_RATE;
+	wave_.resize((int) (element.getDuration() * SECONDS_IN_BAR * SAMPLE_RATE));
+	double frequency = element.getRealFrequency();
+	frequency = (M_PI * 2.0 * frequency) / SAMPLE_RATE;
 	for (int i = 0; i < (int)wave_.size(); i++)
-		wave_[i] = sin(frequency * i);
+		wave_[i] = element.getVolume() * sin(frequency * i);
 }
 
 Track::Track(const std::vector<std::pair(Note, double> >& sequence) // naive constructor;
@@ -30,8 +33,8 @@ Track::Track(const std::vector<std::pair(Note, double> >& sequence) // naive con
 	wave_.clear();
 	for (int i = 0; i < (int)sequence.size(); i++)
 	{
-		int offset = (int)(sequence[i].second);
-		addToSelf((int)wave_.size() - offset, Track(sequence[i].first));
+		int offset = (int) (sequence[i].second * SECONDS_IN_BAR * SAMPLE_RATE);
+		addToSelf((int) wave_.size() - offset, Track(sequence[i].first));
 	}
 }
 
@@ -42,32 +45,33 @@ int Track::getLength() const
 
 double Track::getValue(int index) const
 {
-	assert(0 <= index && index < (int)wave_.size());
+	assert(0 <= index && index < (int) wave_.size());
 	return wave_[index];
 }
 
 Track Track::add(int offset, const Track& delta) const
 {
-	assert(offset <= (int)wave_.size());
-	std::vector<double> result;
-	result.resize(min((int)wave_.size(), (int)wave_.size() + delta.getLength() - offset));
-	for (int i = 0; i < (int)result.size(); i++)
+	assert(offset <= (int) wave_.size());
+	std::vector<double> result(min((int) wave_.size(), (int) wave_.size() + delta.getLength() - offset), 0.0);
+	for (int i = 0; i < (int) result.size(); i++)
 	{
-		result[i] = (i < (int)wave_.size() ? wave_[i] : 0.0);
-		if (i >= wave_.size() - offset)
-			result[i] += delta.getValue(i - (wave_.size() - offset));
+		result[i] = (i < (int) wave_.size() ? wave_[i] : 0.0);
+		if (i >= (int) wave_.size() - offset)
+			result[i] += delta.getValue(i - ((int) wave_.size() - offset));
 	}
 	return Track(result);
 }
 
 void Track::addToSelf(int offset, const Track& delta)
 {
-	assert(offset <= (int)wave_.size());
+	assert(offset <= (int) wave_.size());
+	int OldWaveSize = (int) wave_.size();
 	if (delta.getLength() - offset > 0)
-		wave_.resize((int)wave_.size + delta.getLength() - offset);
-	for (int i = 0; i < (int)wave_.size() - offset; i++)
-		wave_[i] = (i < (int)wave_.size() ? wave_[i] + delta[i - (wave_.size() - offset) :
-						delta[i - (wave_.size() - offset));
+		wave_.resize((int) wave_.size + delta.getLength() - offset);
+	for (int i = OldWaveSize; i < (int) wave_.size(); ++i)
+		wave_[i] = 0;
+	for (int i = OldWaveSize - offset; i < (int) wave_.size(); ++i)
+		wave_[i] += delta.getValue(i - (OldWaveSize - offset));
 }
 
 void Track::drop() const
