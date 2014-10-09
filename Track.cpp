@@ -28,7 +28,7 @@ Track::Track(const Note& element)
 		wave_[i] = element.getVolume() * sin(frequency * i);
 }
 
-Track::Track(const std::vector<std::pair(Note, double> >& sequence) // naive constructor;
+Track::Track(const std::vector<std::pair<Note, double> >& sequence) // naive constructor;
 {
 	wave_.clear();
 	for (int i = 0; i < (int)sequence.size(); i++)
@@ -52,7 +52,7 @@ double Track::getValue(int index) const
 Track Track::add(int offset, const Track& delta) const
 {
 	assert(offset <= (int) wave_.size());
-	std::vector<double> result(min((int) wave_.size(), (int) wave_.size() + delta.getLength() - offset), 0.0);
+	std::vector<double> result(std::min((int) wave_.size(), (int) wave_.size() + delta.getLength() - offset), 0.0);
 	for (int i = 0; i < (int) result.size(); i++)
 	{
 		result[i] = (i < (int) wave_.size() ? wave_[i] : 0.0);
@@ -67,7 +67,7 @@ void Track::addToSelf(int offset, const Track& delta)
 	assert(offset <= (int) wave_.size());
 	int OldWaveSize = (int) wave_.size();
 	if (delta.getLength() - offset > 0)
-		wave_.resize((int) wave_.size + delta.getLength() - offset);
+		wave_.resize((int) wave_.size() + delta.getLength() - offset);
 	for (int i = OldWaveSize; i < (int) wave_.size(); ++i)
 		wave_[i] = 0;
 	for (int i = OldWaveSize - offset; i < (int) wave_.size(); ++i)
@@ -100,7 +100,7 @@ void Track::drop() const
 	fwrite(&audio_format, sizeof(short), 1, p_file);
 	fwrite(&num_channels, sizeof(short), 1, p_file);
 	fwrite(&sample_rate, sizeof(int), 1, p_file);
-	fwrite(&byte_rate, sizeof(int), 1, p_File);
+	fwrite(&byte_rate, sizeof(int), 1, p_file);
 	fwrite(&block_align, sizeof(short), 1, p_file);
 	fwrite(&bits_per_sample, sizeof(short), 1, p_file);
 	fwrite(&subchunk2_id, sizeof(int), 1, p_file);
@@ -110,6 +110,6 @@ void Track::drop() const
 	short data[wave_.size()];
 	for (int i = 0; i < (int)wave_.size(); i++)
 		data[i] = (short)(wave_[i] * 32767 / MAX_AMPLITUDE);
-	fwrite(data, sizeof(short), wave_.size(), pFile);
+	fwrite(data, sizeof(short), wave_.size(), p_file);
 	fclose(p_file);
 }
