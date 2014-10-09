@@ -1,6 +1,7 @@
 #include <vector>
 #include <cstdlib>
 #include <string>
+#include <ctime>
 #include "Note.h"
 
 using namespace std;
