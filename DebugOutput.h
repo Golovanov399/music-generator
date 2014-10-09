@@ -7,15 +7,6 @@
 #include "Note.h"
 #include "Track.h"
 
-const char* getModeName(Mode m)
-{
-	if (m == major)
-		return "major";
-	if (m == minor)
-		return "minor";
-	return "";
-}
-
 void printNote(FILE* OutputFile, const Note& note)
 {
 	fprintf(OutputFile, "%d %f %f", note.getFrequency(), note.getDuration(), note.getVolume());
