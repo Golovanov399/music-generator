@@ -16,32 +16,52 @@ const char* getModeName(Mode m)
 	return "";
 }
 
-void printNoteSequence(const std::vector<std::pair<Note, double> >& NoteSequence, const char* FileName)
+void printNote(FILE* OutputFile, const Note& note)
+{
+	fprintf(OutputFile, "%d %f %f", note.getFrequency(), note.getDuration(), note.getVolume());
+	return;
+}
+
+void printMode(FILE* OutputFile, const Mode& mode)
+{
+	if (mode == major)
+		fprintf(OutputFile, "major");
+	if (mode == minor)
+		fprintf(OutputFile, "minor");
+	return;
+}
+
+void printChord(FILE* OutputFile, const Chord& chord)
+{
+	printNote(OutputFile, chord.getNote());
+	fprintf(OutputFile, " ");
+	printMode(OutputFile, chord.getMode());
+	return;
+}
+
+void printNoteSequence(FILE* OutputFile, const std::vector<std::pair<Note, double> >& NoteSequence)
 {
 	int SequenceLength = NoteSequence.size();
-	FILE* OutputFile = fopen(FileName, "w");
 	for (int i = 0; i < SequenceLength; ++i) {
-		Note CurrentNote = NoteSequence[i].first;
-		fprintf(OutputFile, "%d %f %f %f\n", CurrentNote.getFrequency(), CurrentNote.getDuration(), CurrentNote.getVolume(), NoteSequence[i].second);
+		printNote(OutputFile, NoteSequence[i].first);
+		fprintf(OutputFile, " %f\n", NoteSequence[i].second);
 	}
 	return;
 }
 
-void printChordSequence(const std::vector<std::pair<Chord, double> >& ChordSequence, const char* FileName)
+void printChordSequence(FILE* OutputFile, const std::vector<std::pair<Chord, double> >& ChordSequence)
 {
 	int SequenceLength = ChordSequence.size();
-	FILE* OutputFile = fopen(FileName, "w");
 	for (int i = 0; i < SequenceLength; ++i) {
-		Chord CurrentChord = ChordSequence[i].first;
-		fprintf(OutputFile, "%d %f %f %s %f\n", CurrentChord.getFrequency(), CurrentChord.getDuration(), CurrentChord.getVolume(), getModeName(CurrentChord.getMode()), ChordSequence[i].second);
+		printChord(OutputFile, ChordSequence[i].first);
+		fprintf(OutputFile, " %f\n", ChordSequence[i].second);
 	}
 	return;
 }
 
-void printTrack(const Track& track, const char* FileName)
+void printTrack(FILE* OutputFile, const Track& track)
 {
 	int TrackLength = track.getLength();
-	FILE* OutputFile = fopen(FileName, "w");
 	for (int i = 0; i < TrackLength; ++i) {
 		fprintf(OutputFile, "%f\n", track.getValue(i));
 	}
