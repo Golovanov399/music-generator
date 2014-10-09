@@ -18,8 +18,8 @@ class Note {
 	double volume_;
 	
 public :
-	Note() {frequency_ = 440; duration_ = 1; volume_ = MAX_AMPLITUDE;};
-	Note(int frequency, double duration = 1, double volume = MAX_AMPLITUDE) {frequency_ = frequency;	duration_ = duration; volume_ = volume;}
+	Note() {frequency_ = 440; duration_ = 1; volume_ = MAX_AMPLITUDE / 4;};
+	Note(int frequency, double duration = 1, double volume = MAX_AMPLITUDE / 4) {frequency_ = frequency;	duration_ = duration; volume_ = volume;}
 	double getRealFrequency() const {return pow(2, 1.0 * (frequency_ - 9) / 12) * REAL_FREQUENCY;}
 	int getFrequency() const {return frequency_;}
 	double getDuration() const {return duration_;}
