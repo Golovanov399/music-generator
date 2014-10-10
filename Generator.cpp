@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <string>
 #include <ctime>
+#include "Generator.h
 #include "Note.h"
 
 using namespace std;
