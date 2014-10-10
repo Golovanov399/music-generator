@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <vector>
+#include "DebugOutput.h"
 #include "Note.h"
 #include "Track.h"
 
