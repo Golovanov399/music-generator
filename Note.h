@@ -6,7 +6,7 @@ const double REAL_FREQUENCY = 440.0;
 const double MAX_AMPLITUDE = 100.0;
 const double MIN_AMPLITUDE = 0.0;
 
-enum Mode {major, minor};
+enum Mode {MAJOR, MINOR};
 
 class Note {
 	int frequency_;			
