@@ -38,7 +38,7 @@ int getNoteFrequency(const string& noteName, int octave = 0){
 }
 
 Chord generateTonicChord(){
-	return Chord(Note(getNoteFrequency("A")), minor);
+	return Chord(Note(getNoteFrequency("A")), MINOR);
 }
 
 int getNoteFrequencyByIndex(const Chord& tonicChord, int index){
