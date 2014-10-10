@@ -35,9 +35,10 @@ double Note::getVolume() const
   return volume_;
 }
 
-Chord::Chord()
+Chord::Chord(Note note, Mode mode)
 {
-
+  note_ = note;
+  mode_ = mode;
 }
 
 Mode Chord::getMode() const
