@@ -76,7 +76,6 @@ void Track::addToSelf(int offset, const Track& delta)
 
 void Track::drop() const
 {
-	FILE* p_file = fopen("sample.wav", "wb");
 	int	chunk_id = 0x46464952, // RIFF
 		chunk_size,
 		format = 0x45564157, // WAVE
@@ -91,6 +90,8 @@ void Track::drop() const
 	int	subchunk2_id = 0x61746164, // data
 		subchunk2_size = wave_.size() * num_channels * bits_per_sample / 8;
 		chunk_size = 4 + (8 + subchunk1_size) + (8 + subchunk2_size);
+
+	FILE* p_file = fopen("sample.wav", "wb");
 
 	fwrite(&chunk_id, sizeof(int), 1, p_file);	
 	fwrite(&chunk_size, sizeof(int), 1, p_file);

@@ -58,6 +58,6 @@ void printTrack(FILE* OutputFile, const Track& track)
 void scanNoteSequence(FILE* InputFile, std::vector<std::pair<Note, double> >& NoteSequence)
 {
 	int NoteFrequency; double NoteDuration, Amplitude, Position;
-	while (fscanf(InputFile, "%d%lf%lf%lf", &NoteFrequency, &NoteDuration, &Amplitude, &Position))
-	        NoteSequence.push_back(make_pair(Note(NoteFrequency, NoteDuration, Amplitude), Position));
+	while (fscanf(InputFile, "%d%lf%lf%lf", &NoteFrequency, &NoteDuration, &Amplitude, &Position) == 4)
+	        NoteSequence.push_back(std::make_pair(Note(NoteFrequency, NoteDuration, Amplitude), Position));
 }
