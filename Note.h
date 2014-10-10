@@ -1,10 +1,6 @@
-//#pragma once
-
 #ifndef __Note__
 
 #define __Note__
-
-#include <cmath>	//for pow(x, y)
 
 const double REAL_FREQUENCY = 440.0;
 const double MAX_AMPLITUDE = 100.0;
@@ -18,12 +14,12 @@ class Note {
 	double volume_;
 	
 public :
-	Note() {frequency_ = 440; duration_ = 1; volume_ = MAX_AMPLITUDE / 4;};
-	Note(int frequency, double duration = 1, double volume = MAX_AMPLITUDE / 4) {frequency_ = frequency;	duration_ = duration; volume_ = volume;}
-	double getRealFrequency() const {return pow(2, 1.0 * (frequency_ - 9) / 12) * REAL_FREQUENCY;}
-	int getFrequency() const {return frequency_;}
-	double getDuration() const {return duration_;}
-	double getVolume() const {return volume_;}
+	Note();
+	Note(int frequency, double duration = 1, double volume = MAX_AMPLITUDE / 4);
+	double getRealFrequency() const;
+	int getFrequency() const;
+	double getDuration() const;
+	double getVolume() const;
 } ;
 
 class Chord {
@@ -31,15 +27,12 @@ class Chord {
 	Mode mode_;
 	
 public :
-	Chord(Note note, Mode mode) {
-		note_ = note;
-		mode_ = mode;
-	}
-	Mode getMode() const {return mode_;}
-	Note getNote() const {return note_;}
-	int getFrequency() const {return note_.getFrequency();}
-	double getDuration() const {return note_.getDuration();}
-	double getVolume() const {return note_.getVolume();}
+	Chord(Note note, Mode mode);
+	Mode getMode() const;
+	Note getNote() const;
+	int getFrequency() const;
+	double getDuration() const;
+	double getVolume() const;
 } ;
 
 #endif
