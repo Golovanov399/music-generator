@@ -108,9 +108,10 @@ void Track::drop() const
 	fwrite(&subchunk2_size, sizeof(int), 1, p_file);
 
 
-	short data[wave_.size()];
 	for (int i = 0; i < (int)wave_.size(); i++)
-		data[i] = (short)(wave_[i] * 32767 / MAX_AMPLITUDE);
-	fwrite(data, sizeof(short), wave_.size(), p_file);
+	{
+		short v = (short)(wave_[i] * 32767 / MAX_AMPLITUDE);
+		fwrite(&v, sizeof(short), 1, p_file);
+	}
 	fclose(p_file);
 }
