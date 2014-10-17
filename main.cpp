@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <string>
 #include <vector>
 #include "Generator.h"
 #include "DebugOutput.h"
