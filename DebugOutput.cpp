@@ -12,10 +12,10 @@ void printNote(FILE* OutputFile, const Note& note)
 
 void printMode(FILE* OutputFile, const Mode& mode)
 {
-	if (mode == major)
-		fprintf(OutputFile, "major");
-	if (mode == minor)
-		fprintf(OutputFile, "minor");
+	if (mode == MAJOR)
+		fprintf(OutputFile, "MAJOR");
+	if (mode == MINOR)
+		fprintf(OutputFile, "MINOR");
 	return;
 }
 
