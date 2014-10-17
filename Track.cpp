@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cstdio>
 #include <cmath>
+#include <iostream>
 
 const int SAMPLE_RATE = 44100;
 const double SECONDS_IN_BAR = 1.0;
@@ -92,6 +93,7 @@ void Track::drop() const
 		subchunk2_size = wave_.size() * num_channels * bits_per_sample / 8;
 		chunk_size = 4 + (8 + subchunk1_size) + (8 + subchunk2_size);
 
+
 	fwrite(&chunk_id, sizeof(int), 1, p_file);	
 	fwrite(&chunk_size, sizeof(int), 1, p_file);
 	fwrite(&format, sizeof(int), 1, p_file);
@@ -106,10 +108,12 @@ void Track::drop() const
 	fwrite(&subchunk2_id, sizeof(int), 1, p_file);
 	fwrite(&subchunk2_size, sizeof(int), 1, p_file);
 
-
-	short data[wave_.size()];
+//	std::cerr << "asdasd\n" << std::endl;
+//	short data[wave_.size()];
 	for (int i = 0; i < (int)wave_.size(); i++)
-		data[i] = (short)(wave_[i] * 32767 / MAX_AMPLITUDE);
-	fwrite(data, sizeof(short), wave_.size(), p_file);
+	{
+		short v = (short)(wave_[i] * 32767 / MAX_AMPLITUDE);
+		fwrite(&v, sizeof(short), 1, p_file);
+	}
 	fclose(p_file);
 }
