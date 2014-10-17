@@ -51,17 +51,17 @@ Note Chord::getNote() const
   return note_;
 }
 
-int getFrequency() const
+int Chord::getFrequency() const
 {
   return note_.getFrequency();
 }
 
-double getDuration() const
+double Chord::getDuration() const
 {
   return note_.getDuration();
 }
 	
-double getVolume() const
+double Chord::getVolume() const
 {
   return note_.getVolume();
 }
