@@ -8,7 +8,7 @@ Note::Note()
   volume_ = MAX_AMPLITUDE / 4;
 }
 
-Note::Note(int frequency, double duration = 1, double volume = MAX_AMPLITUDE / 4)
+Note::Note(int frequency, double duration, double volume)
 {
   frequency_ = frequency;
   duration_ = duration;
