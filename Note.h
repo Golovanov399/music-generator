@@ -9,10 +9,10 @@ const double MIN_AMPLITUDE = 0.0;
 enum Mode {MAJOR, MINOR};
 
 class Note {
-	int frequency_;			
-	double duration_;		
+	int frequency_;
+	double duration_;
 	double volume_;
-	
+
 public :
 	Note();
 	Note(int frequency, double duration = 1, double volume = MAX_AMPLITUDE / 4);
@@ -25,7 +25,7 @@ public :
 class Chord {
 	Note note_;
 	Mode mode_;
-	
+
 public :
 	Chord(Note note, Mode mode);
 	Mode getMode() const;

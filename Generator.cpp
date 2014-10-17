@@ -7,7 +7,7 @@
 
 using namespace std;
 
-int getNoteFrequency(const string& noteName, int octave) {
+int getNoteFrequency(const string& noteName, int octave = 0) {
 	int currentFrequency = 0;
 	switch (noteName[0]){
 		case 'C':

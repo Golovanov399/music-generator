@@ -3,11 +3,12 @@
 
 #include <vector>
 #include <cstdlib>
+#include <string>
 #include "Note.h"
 
 using namespace std;
 
-int getNoteFrequency(const string& noteName, int octave = 0);
+int getNoteFrequency(const string& noteName, int octave);
 
 Chord generateTonicChord();
 
