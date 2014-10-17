@@ -43,7 +43,7 @@ Chord generateTonicChord(){
 
 int getNoteFrequencyByIndex(const Chord& tonicChord, int index){
 	// 1-indexation here
-	if (tonicChord.getMode() == major){
+	if (tonicChord.getMode() == MAJOR){
 		switch(index){
 			case 1:
 				return tonicChord.getNote().getFrequency() + 0;
@@ -94,10 +94,10 @@ vector<pair<Chord, double> > generateChords(const Chord& tonicChord){
 	int count = 1 << (rand() % 2 + 2);
 	double chordLength = 1;
 	vector<Chord> combo;
-	combo.push_back(Chord(getNoteFrequencyByIndex(tonicChord, 1), minor));
-	combo.push_back(Chord(getNoteFrequencyByIndex(tonicChord, 6), major));
-	combo.push_back(Chord(getNoteFrequencyByIndex(tonicChord, 3), major));
-	combo.push_back(Chord(getNoteFrequencyByIndex(tonicChord, 7), major));
+	combo.push_back(Chord(getNoteFrequencyByIndex(tonicChord, 1), MINOR));
+	combo.push_back(Chord(getNoteFrequencyByIndex(tonicChord, 6), MAJOR));
+	combo.push_back(Chord(getNoteFrequencyByIndex(tonicChord, 3), MAJOR));
+	combo.push_back(Chord(getNoteFrequencyByIndex(tonicChord, 7), MAJOR));
 	for (int i = 0; i < count; i++){
 		for (int j = 0; j < combo.size(); j++){
 			chords.push_back(make_pair(combo[j], (combo.size() * i + j) * chordLength));
@@ -121,7 +121,7 @@ vector<pair<Note, double> > generateMaintheme(const vector<pair<Chord, double> >
 }
 
 vector<pair<Note, double> > generateMelody(){
-	Chord tonicChord(getNoteFrequency("A"), minor);
+	Chord tonicChord(getNoteFrequency("A"), MINOR);
 	vector<pair<Chord, double> > chords = generateChords(tonicChord);
 	vector<pair<Note, double> > accompanement = generateAccompanement(chords);
 	vector<pair<Note, double> > maintheme = generateMaintheme(chords);
