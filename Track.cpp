@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cstdio>
 #include <cmath>
+#include <iostream>
 
 const int SAMPLE_RATE = 44100;
 const double SECONDS_IN_BAR = 1.0;
@@ -21,11 +22,16 @@ Track::Track(const std::vector<double>& wave)
 
 Track::Track(const Note& element)
 {
-	wave_.resize((int) (element.getDuration() * SECONDS_IN_BAR * SAMPLE_RATE));
+	wave_.resize((int) (element.getDuration() * SECONDS_IN_BAR * SAMPLE_RATE * (1.0 + release_value)));
 	double frequency = element.getRealFrequency();
 	frequency = (M_PI * 2.0 * frequency) / SAMPLE_RATE;
 	for (int i = 0; i < (int)wave_.size(); i++)
-		wave_[i] = element.getVolume() * sin(frequency * i);
+	{
+		double ret = ADSR(i, (double)i / (double)(wave_.size() * (1.0 + release_value)));
+		assert(ret <= 1.0);
+		wave_[i] = ret *
+		element.getVolume() * sin(frequency * i);
+	}
 }
 
 Track::Track(const std::vector<std::pair<Note, double> >& sequence) // naive constructor;
@@ -106,12 +112,36 @@ void Track::drop() const
 	fwrite(&bits_per_sample, sizeof(short), 1, p_file);
 	fwrite(&subchunk2_id, sizeof(int), 1, p_file);
 	fwrite(&subchunk2_size, sizeof(int), 1, p_file);
-
-
+	
 	for (int i = 0; i < (int)wave_.size(); i++)
 	{
 		short v = (short)(wave_[i] * 32767 / MAX_AMPLITUDE);
 		fwrite(&v, sizeof(short), 1, p_file);
 	}
 	fclose(p_file);
+}
+
+void Track::normalize()
+{
+	double mx = 0;
+	for (int i = 0; i < (int)wave_.size(); i++)
+		if (fabs(wave_[i]) > mx) mx = fabs(wave_[i]);
+	std::cerr << "asdasd " << mx << std::endl;
+	if (mx > MAX_AMPLITUDE)
+		for (int i = 0; i < (int)wave_.size(); i++)
+			wave_[i] *= ((MAX_AMPLITUDE - 1)/ mx);
+}
+
+double ADSR(int index, double arg)
+{
+//	if (index <= 10) std::cerr << arg << std::endl;
+	assert(arg <= 1.0 + release_value);
+	if (arg <= attack_value)
+		return (attack_value == 0 ? 1 : arg / attack_value);
+	arg -= attack_value;
+	if (arg <= decay_value)
+		return (decay_value == 0 ? 1 : 1 - (1 - sustain_value) * arg / decay_value);
+	if (arg + attack_value <= 1) return sustain_value;
+	arg -= 1.0 - attack_value;
+	return (release_value == 0 ? 0 : sustain_value * (release_value - arg) / release_value);
 }

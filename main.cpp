@@ -13,10 +13,12 @@ int main()
 	fclose(OutputFile1);
 
 	Track MelodyTrack(Melody);
+	MelodyTrack.normalize();
+
 	FILE* OutputFile2 = fopen("Track.txt", "w");
 	printTrack(OutputFile2, MelodyTrack);
 	fclose(OutputFile2);
-
+	
 	MelodyTrack.drop();
 
 	return 0;
