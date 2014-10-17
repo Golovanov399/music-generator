@@ -5,10 +5,17 @@
 #include <vector>
 #include "Note.h"
 
+<<<<<<< HEAD
 const double attack_value = 0.2;
 const double decay_value = 0.2;
 const double sustain_value = 0.2;
 const double release_value = 0.2;
+=======
+const int attack_value = 0.2;
+const int decay_value = 0;
+const int sustain_value = 1;
+const int release_value = 0.2;
+>>>>>>> origin/master
 
 class Track
 {
