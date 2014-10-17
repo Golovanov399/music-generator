@@ -2,12 +2,12 @@
 #include <cstdlib>
 #include <string>
 #include <ctime>
-#include "Generator.h
+#include "Generator.h"
 #include "Note.h"
 
 using namespace std;
 
-int getNoteFrequency(const string& noteName, int octave = 0){
+int getNoteFrequency(const string& noteName, int octave) {
 	int currentFrequency = 0;
 	switch (noteName[0]){
 		case 'C':
