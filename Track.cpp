@@ -1,9 +1,10 @@
-#include "Track.h"
-#include "Note.h"
 #include <cassert>
-#include <cstdio>
 #include <cmath>
+#include <cstdio>
 #include <iostream>
+#include "Note.h"
+#include "Instrument.h"
+#include "Track.h"
 
 Track::Track()
 {
@@ -17,39 +18,23 @@ Track::Track(const std::vector<double>& wave)
 		wave_[i] = wave[i];
 }
 
-double ADSR(int index, double time, double duration) // time in seconds
-{
-	if (time <= attack_value)
-		return (attack_value == 0 ? 1 : time / attack_value);
-	if (time <= attack_value + decay_value)
-		return (1 - (1 - sustain_value) * (time - attack_value) / decay_value);
-	if (time <= duration)
-		return sustain_value;
-	if (time <= duration + release_value)
-		return (sustain_value * (duration + release_value - time) / release_value);
-	return 0;
-}
-
-Track::Track(const Note& element)
+Track::Track(const Note& element, const Instrument& instrument)
 {
 	double duration = element.getDuration() * SECONDS_IN_BAR;
-	wave_.resize((int) (duration * (double) SAMPLE_RATE * (1.0 + release_value)));
-	double frequency = element.getRealFrequency();
-	frequency = (M_PI * 2.0 * frequency) / SAMPLE_RATE;
-	for (int i = 0; i < (int)wave_.size(); i++)
-	{
-		double amplitude = ADSR(i, (double) i / (double) SAMPLE_RATE, duration);
-		wave_[i] = amplitude * element.getVolume() * sin(frequency * i);
-	}
+	wave_.resize((int) ((duration + instrument.getReleaseTime()) * (double) SAMPLE_RATE));
+	double frequency = (M_PI * 2.0 * element.getRealFrequency()) / (double) SAMPLE_RATE;
+	double volume = element.getVolume();
+	for (int i = 0; i < wave_.size(); ++i)
+		wave_[i] = instrument.getWaveValue(frequency, volume, i + 1, duration);
 }
 
-Track::Track(const std::vector<std::pair<Note, double> >& sequence) // naive constructor;
+Track::Track(const std::vector<std::pair<Note, double> >& sequence, const Instrument& instrument) // naive constructor;
 {
 	wave_.clear();
 	for (int i = 0; i < (int)sequence.size(); i++)
 	{
 		int offset = (int) (sequence[i].second * SECONDS_IN_BAR * SAMPLE_RATE);
-		addToSelf((int) wave_.size() - offset, Track(sequence[i].first));
+		addToSelf((int) wave_.size() - offset, Track(sequence[i].first, instrument));
 	}
 }
 
