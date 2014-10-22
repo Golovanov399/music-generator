@@ -1,4 +1,3 @@
-#include <cstdio>
 #include <cstdlib>
 #include <vector>
 #include "Test.h"
