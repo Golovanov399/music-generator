@@ -30,6 +30,6 @@ public:
 	void drop() const;
 };
 
-double ADSR(int index, double arg);
+double ADSR(int index, double time, double duration);
 
 #endif
