@@ -114,7 +114,7 @@ void Track::drop() const
 	short	block_align = num_channels * bits_per_sample / 8;
 	int	subchunk2_id = 0x61746164; // data
 	int	subchunk2_size = wave_.size() * num_channels * bits_per_sample / 8;
-	int	chunk_size = 4 + (8 + subchunk1_size) + (8 + subchunk2_size);
+		chunk_size = 4 + (8 + subchunk1_size) + (8 + subchunk2_size);
 
 	FILE* p_file = fopen("sample.wav", "wb");
 
