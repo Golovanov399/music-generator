@@ -17,6 +17,19 @@ Track::Track(const std::vector<double>& wave)
 		wave_[i] = wave[i];
 }
 
+double ADSR(int index, double arg)
+{
+	if (arg <= attack_value)
+		return (attack_value == 0 ? 1 : arg / attack_value);
+	if (arg <= attack_value + decay_value)
+		return (1 - (1 - sustain_value) * (arg - attack_value) / decay_value);
+	if (arg <= 1.0)
+		return sustain_value;
+	if (arg <= 1.0 + release_value)
+		return (sustain_value * (1.0 + release_value - arg) / release_value);
+	return 0;
+}
+
 Track::Track(const Note& element)
 {
 	wave_.resize((int) (element.getDuration() * SECONDS_IN_BAR * SAMPLE_RATE * (1.0 + release_value)));
@@ -24,10 +37,8 @@ Track::Track(const Note& element)
 	frequency = (M_PI * 2.0 * frequency) / SAMPLE_RATE;
 	for (int i = 0; i < (int)wave_.size(); i++)
 	{
-		double ret = ADSR(i, (double)i / (double)(wave_.size() * (1.0 + release_value)));
-		assert(ret <= 1.0);
-		wave_[i] = ret *
-		element.getVolume() * sin(frequency * i);
+		double amplitude = ADSR(i, (double)i / (double)(wave_.size() / (1.0 + release_value)));
+		wave_[i] = amplitude * element.getVolume() * sin(frequency * i);
 	}
 }
 
@@ -77,6 +88,17 @@ void Track::addToSelf(int offset, const Track& delta)
 		wave_[i] += delta.getValue(i - (OldWaveSize - offset));
 }
 
+void Track::normalize()
+{
+	double mx = 0;
+	for (int i = 0; i < (int)wave_.size(); i++)
+		if (fabs(wave_[i]) > mx) mx = fabs(wave_[i]);
+	std::cerr << "asdasd " << mx << std::endl;
+	if (mx > MAX_AMPLITUDE - 1)
+		for (int i = 0; i < (int)wave_.size(); i++)
+			wave_[i] *= ((MAX_AMPLITUDE - 1)/ mx);
+}
+
 void Track::drop() const
 {
 	int	chunk_id = 0x46464952, // RIFF
@@ -116,29 +138,4 @@ void Track::drop() const
 		fwrite(&v, sizeof(short), 1, p_file);
 	}
 	fclose(p_file);
-}
-
-void Track::normalize()
-{
-	double mx = 0;
-	for (int i = 0; i < (int)wave_.size(); i++)
-		if (fabs(wave_[i]) > mx) mx = fabs(wave_[i]);
-	std::cerr << "asdasd " << mx << std::endl;
-	if (mx > MAX_AMPLITUDE)
-		for (int i = 0; i < (int)wave_.size(); i++)
-			wave_[i] *= ((MAX_AMPLITUDE - 1)/ mx);
-}
-
-double ADSR(int index, double arg)
-{
-//	if (index <= 10) std::cerr << arg << std::endl;
-	assert(arg <= 1.0 + release_value);
-	if (arg <= attack_value)
-		return (attack_value == 0 ? 1 : arg / attack_value);
-	arg -= attack_value;
-	if (arg <= decay_value)
-		return (decay_value == 0 ? 1 : 1 - (1 - sustain_value) * arg / decay_value);
-	if (arg + attack_value <= 1) return sustain_value;
-	arg -= 1.0 - attack_value;
-	return (release_value == 0 ? 0 : sustain_value * (release_value - arg) / release_value);
 }
