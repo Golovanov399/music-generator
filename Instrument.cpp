@@ -13,6 +13,11 @@ Instrument::Instrument(const std::vector<double>& harmonics, double attackTime, 
 	return;
 }
 
+double Instrument::getReleaseTime() const
+{
+	return releaseTime_;
+}
+
 double Instrument::ADSR(double time, double duration) const // time in seconds
 {
 	if (time <= attackTime_)
