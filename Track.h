@@ -4,13 +4,9 @@
 
 #include <vector>
 #include "Note.h"
+#include "Instrument.h"
 
-const int SAMPLE_RATE = 44100;
 const double SECONDS_IN_BAR = 1.0;
-const double attack_value = 0.2;
-const double decay_value = 0.2;
-const double sustain_value = 0.2;
-const double release_value = 0.2;
 
 class Track
 {
@@ -19,8 +15,8 @@ class Track
 public:
 	Track();
 	Track(const std::vector<double>& wave);
-	Track(const Note& element);
-	Track(const std::vector<std::pair<Note, double> >& sequence); // naive constructor;
+	Track(const Note& element, const Instrument& instrument);
+	Track(const std::vector<std::pair<Note, double> >& sequence, const Instrument& instrument); // naive constructor;
 	int getLength() const;
 	double getValue(int index) const;
 
@@ -29,7 +25,5 @@ public:
 	void normalize();
 	void drop() const;
 };
-
-double ADSR(int index, double time, double duration);
 
 #endif
