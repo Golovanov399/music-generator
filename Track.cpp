@@ -101,20 +101,20 @@ void Track::normalize()
 
 void Track::drop() const
 {
-	int	chunk_id = 0x46464952, // RIFF
-		chunk_size,
-		format = 0x45564157, // WAVE
-		subchunk1_id = 0x20746d66, // "fmt "
-		subchunk1_size = 16; // for PCM
-	short	audio_format = 1,
-		num_channels = 1,
-		bits_per_sample = 16;
-	int	sample_rate = SAMPLE_RATE,
-		byte_rate = sample_rate * num_channels * bits_per_sample / 8;
+	int	chunk_id = 0x46464952; // RIFF
+	int	chunk_size;
+	int	format = 0x45564157; // WAVE
+	int	subchunk1_id = 0x20746d66; // "fmt "
+	int	subchunk1_size = 16; // for PCM
+	short	audio_format = 1;
+	short	num_channels = 1;
+	short	bits_per_sample = 16;
+	int	sample_rate = SAMPLE_RATE;
+	int	byte_rate = sample_rate * num_channels * bits_per_sample / 8;
 	short	block_align = num_channels * bits_per_sample / 8;
-	int	subchunk2_id = 0x61746164, // data
-		subchunk2_size = wave_.size() * num_channels * bits_per_sample / 8;
-		chunk_size = 4 + (8 + subchunk1_size) + (8 + subchunk2_size);
+	int	subchunk2_id = 0x61746164; // data
+	int	subchunk2_size = wave_.size() * num_channels * bits_per_sample / 8;
+	int	chunk_size = 4 + (8 + subchunk1_size) + (8 + subchunk2_size);
 
 	FILE* p_file = fopen("sample.wav", "wb");
 
