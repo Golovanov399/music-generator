@@ -5,9 +5,6 @@
 #include <cmath>
 #include <iostream>
 
-const int SAMPLE_RATE = 44100;
-const double SECONDS_IN_BAR = 1.0;
-
 Track::Track()
 {
 	wave_.clear();
