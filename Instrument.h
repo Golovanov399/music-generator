@@ -16,6 +16,8 @@ class Instrument
 	double releaseTime_;
 public:
 	Instrument(const std::vector<double>& harmonics, double attackTime, double decayTime, double sustainLevel, double releaseTime);
+
+	double getReleaseTime() const;
 	double ADSR(double time, double duration) const;
 	double getWaveValue(double frequency, double volume, double time, double duration) const;
 };
