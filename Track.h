@@ -5,6 +5,8 @@
 #include <vector>
 #include "Note.h"
 
+const int SAMPLE_RATE = 44100;
+const double SECONDS_IN_BAR = 1.0;
 const double attack_value = 0.2;
 const double decay_value = 0.2;
 const double sustain_value = 0.2;
