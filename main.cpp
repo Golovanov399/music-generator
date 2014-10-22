@@ -2,8 +2,9 @@
 #include <string>
 #include <vector>
 #include "Generator.h"
-#include "DebugOutput.h"
+#include "Instrument.h"
 #include "Track.h"
+#include "DebugOutput.h"
 
 int main()
 {
@@ -12,7 +13,11 @@ int main()
 	printNoteSequence(OutputFile1, Melody);
 	fclose(OutputFile1);
 
-	Track MelodyTrack(Melody);
+	Instrument noInstrument(std::vector<double>(0), 0.0, 0.0, 1.0, 0.0);
+	//Instrument unknownInstrument1(std::vector<double>(0), 0.2, 0.2, 0.3, 0.2);
+
+	Track MelodyTrack(Melody, noInstrument);
+	//Track MelodyTrack(Melody, unknownInstrument1);
 	MelodyTrack.normalize();
 
 	FILE* OutputFile2 = fopen("Track.txt", "w");
