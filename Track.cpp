@@ -17,27 +17,28 @@ Track::Track(const std::vector<double>& wave)
 		wave_[i] = wave[i];
 }
 
-double ADSR(int index, double arg)
+double ADSR(int index, double time, double duration) // time in seconds
 {
-	if (arg <= attack_value)
-		return (attack_value == 0 ? 1 : arg / attack_value);
-	if (arg <= attack_value + decay_value)
-		return (1 - (1 - sustain_value) * (arg - attack_value) / decay_value);
-	if (arg <= 1.0)
+	if (time <= attack_value)
+		return (attack_value == 0 ? 1 : time / attack_value);
+	if (time <= attack_value + decay_value)
+		return (1 - (1 - sustain_value) * (time - attack_value) / decay_value);
+	if (time <= duration)
 		return sustain_value;
-	if (arg <= 1.0 + release_value)
-		return (sustain_value * (1.0 + release_value - arg) / release_value);
+	if (time <= duration + release_value)
+		return (sustain_value * (duration + release_value - time) / release_value);
 	return 0;
 }
 
 Track::Track(const Note& element)
 {
-	wave_.resize((int) (element.getDuration() * SECONDS_IN_BAR * SAMPLE_RATE * (1.0 + release_value)));
+	double duration = element.getDuration() * SECONDS_IN_BAR;
+	wave_.resize((int) (duration * (double) SAMPLE_RATE * (1.0 + release_value)));
 	double frequency = element.getRealFrequency();
 	frequency = (M_PI * 2.0 * frequency) / SAMPLE_RATE;
 	for (int i = 0; i < (int)wave_.size(); i++)
 	{
-		double amplitude = ADSR(i, (double)i / (double)(wave_.size() / (1.0 + release_value)));
+		double amplitude = ADSR(i, (double) i / (double) SAMPLE_RATE, duration);
 		wave_[i] = amplitude * element.getVolume() * sin(frequency * i);
 	}
 }
