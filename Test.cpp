@@ -16,8 +16,8 @@ void testADSR()
 	return;
 }
 
-int main()
-{
-	testADSR();
-	return 0;	
-}
+// int main()
+// {
+// 	testADSR();
+// 	return 0;	
+// }
