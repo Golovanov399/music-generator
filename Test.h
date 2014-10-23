@@ -1,3 +1,3 @@
 #include <cstdlib>
 
-void testADSR(int length);
+void testADSR();
