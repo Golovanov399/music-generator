@@ -8,7 +8,7 @@
 
 int main()
 {
-	std::vector<std::pair<Note, double> > Melody = generateMelody();
+	std::vector<std::pair<Note, double> > Melody = Generator().generateMelody();
 	FILE* OutputFile1 = fopen("NoteSequence.txt", "w");
 	printNoteSequence(OutputFile1, Melody);
 	fclose(OutputFile1);

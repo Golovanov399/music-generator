@@ -8,18 +8,19 @@
 
 using namespace std;
 
-int getNoteFrequency(const string& noteName, int octave);
+class Generator{
+private:
+	int getNoteFrequency(const string& noteName, int octave);
+	Chord generateTonicChord();
+	int getNoteFrequencyByIndex(const Chord& tonicChord, int index);
+	vector<pair<Chord, double> > generateChords(const Chord& tonicChord);
+	vector<pair<Note, double> > generateAccompanement(const vector<pair<Chord, double> >& chords);
+	vector<pair<Note, double> > generateMaintheme(const vector<pair<Chord, double> >& chords);
 
-Chord generateTonicChord();
-
-int getNoteFrequencyByIndex(const Chord& tonicChord, int index);
-
-vector<pair<Chord, double> > generateChords(const Chord& tonicChord);
-
-vector<pair<Note, double> > generateAccompanement(const vector<pair<Chord, double> >& chords);
-
-vector<pair<Note, double> > generateMaintheme(const vector<pair<Chord, double> >& chords);
-
-vector<pair<Note, double> > generateMelody();
+public:
+	Generator(){}
+	~Generator(){}
+	vector<pair<Note, double> > generateMelody();
+};
 
 #endif
