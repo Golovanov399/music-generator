@@ -6,8 +6,9 @@
 #include "Note.h"
 
 using namespace std;
+using namespace generator;
 
-int Generator::getNoteFrequency(const string& noteName, int octave = 0) {
+int generator::getNoteFrequency(const string& noteName, int octave = 0) {
 	int currentFrequency = 0;
 	switch (noteName[0]){
 		case 'C':
@@ -37,11 +38,11 @@ int Generator::getNoteFrequency(const string& noteName, int octave = 0) {
 	return currentFrequency + 12 * octave;
 }
 
-Chord Generator::generateTonicChord(){
+Chord generator::generateTonicChord(){
 	return Chord(Note(getNoteFrequency("A")), MINOR);
 }
 
-int Generator::getNoteFrequencyByIndex(const Chord& tonicChord, int index){
+int generator::getNoteFrequencyByIndex(const Chord& tonicChord, int index){
 	// 1-indexation here
 	if (tonicChord.getMode() == MAJOR){
 		switch(index){
@@ -84,7 +85,7 @@ int Generator::getNoteFrequencyByIndex(const Chord& tonicChord, int index){
 	}
 }
 
-vector<pair<Chord, double> > Generator::generateChords(const Chord& tonicChord){
+vector<pair<Chord, double> > Generator1::generateChords(const Chord& tonicChord) const{
 	/* 	Each element of vector<pair<Chord, double>>
 		is a pair of a Chord and its appearance time
 	*/
@@ -106,7 +107,7 @@ vector<pair<Chord, double> > Generator::generateChords(const Chord& tonicChord){
 	return chords;
 }
 
-vector<pair<Note, double> > Generator::generateAccompanement(const vector<pair<Chord, double> >& chords){
+vector<pair<Note, double> > Generator1::generateAccompanement(const vector<pair<Chord, double> >& chords) const{
 	vector<pair<Note, double> > accompanement;
 	for (int i = 0; i < chords.size(); i++){
 		for (int j = 1; j <= 5; j += 2){
@@ -116,11 +117,11 @@ vector<pair<Note, double> > Generator::generateAccompanement(const vector<pair<C
 	return accompanement;
 }
 
-vector<pair<Note, double> > Generator::generateMaintheme(const vector<pair<Chord, double> >& chords){
+vector<pair<Note, double> > Generator1::generateMaintheme(const vector<pair<Chord, double> >& chords) const{
 	return vector<pair<Note, double> >();
 }
 
-vector<pair<Note, double> > Generator::generateMelody(){
+vector<pair<Note, double> > Generator1::generateMelody() const{
 	Chord tonicChord(getNoteFrequency("A"), MINOR);
 	vector<pair<Chord, double> > chords = generateChords(tonicChord);
 	vector<pair<Note, double> > accompanement = generateAccompanement(chords);
