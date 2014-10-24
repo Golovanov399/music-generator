@@ -12,16 +12,19 @@ namespace generator{
 	int getNoteFrequency(const string& noteName, int octave);
 	Chord generateTonicChord();
 	int getNoteFrequencyByIndex(const Chord& tonicChord, int index);
+	int getNoteIndex(const Chord& tonicChord, const Note& note);
+	int getNextNoteFrequency(const Chord& tonicChord, const Note& note, int additor);
 }
-
-using namespace generator;
 
 class Generator{
 public:
+	double basicChordLength;
+
 	Generator(){}
 	~Generator(){}
+	vector<pair<Note, double> > generateMelody() const;
+
 	virtual vector<pair<Chord, double> > generateChords(const Chord& tonicChord) const = 0;
-	virtual vector<pair<Note, double> > generateMelody() const = 0;
 	virtual vector<pair<Note, double> > generateAccompanement(const vector<pair<Chord, double> >& chords) const = 0;
 	virtual vector<pair<Note, double> > generateMaintheme(const vector<pair<Chord, double> >& chords) const = 0;
 };
@@ -31,7 +34,6 @@ public:
 	Generator1(){}
 	~Generator1(){}
 	vector<pair<Chord, double> > generateChords(const Chord& tonicChord) const;
-	vector<pair<Note, double> > generateMelody() const;
 	vector<pair<Note, double> > generateAccompanement(const vector<pair<Chord, double> >& chords) const;
 	vector<pair<Note, double> > generateMaintheme(const vector<pair<Chord, double> >& chords) const;
 };

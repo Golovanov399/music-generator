@@ -20,6 +20,8 @@ public :
 	int getFrequency() const;
 	double getDuration() const;
 	double getVolume() const;
+
+	void setVolume(double volume);
 } ;
 
 class Chord {
