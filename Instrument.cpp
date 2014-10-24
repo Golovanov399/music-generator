@@ -35,7 +35,7 @@ double Instrument::getWaveValue(double frequency, double volume, double time, do
 {
 	double waveValue = sin(frequency * time);
 	for (int i = 0; i < harmonics_.size(); ++i)
-		waveValue += (sin(harmonics_[i] * time) / (double) i);
+		waveValue += (harmonics_[i] * sin(i * frequency * time));
 	double timeInSeconds = time / (double) SAMPLE_RATE;
 	return (ADSR(timeInSeconds, duration) * volume * waveValue);
 }
