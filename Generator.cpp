@@ -155,7 +155,7 @@ vector<pair<Note, double> > Generator1::generateMaintheme(const vector<pair<Chor
 	vector<pair<Note, double> > maintheme;
 	double baseVolume = MAX_AMPLITUDE / 4;
 	vector<pair<int, double> > baseSequence;
-	/*TODO*/
+	
 
 	return maintheme;
 }

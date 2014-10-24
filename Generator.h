@@ -20,7 +20,7 @@ class Generator{
 public:
 	double basicChordLength;
 
-	Generator(){}
+	Generator();
 	~Generator(){}
 	vector<pair<Note, double> > generateMelody() const;
 
