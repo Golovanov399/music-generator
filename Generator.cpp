@@ -8,6 +8,18 @@
 using namespace std;
 using namespace generator;
 
+int getCountOfTrailingZeroes(int x){
+	//to be replaced by __builtin_
+	if (!x)
+		return -1;
+	int count = 0;
+	while (!(x & 1)){
+		count++;
+		x >>= 1;
+	}
+	return count;
+}
+
 int generator::getNoteFrequency(const string& noteName, int octave = 0) {
 	int currentFrequency = 0;
 	switch (noteName[0]){
@@ -121,11 +133,11 @@ vector<pair<Chord, double> > Generator1::generateChords(const Chord& tonicChord)
 	vector<pair<Chord, double> > chords;
 	int tonicFrequency = tonicChord.getNote().getFrequency();
 	srand(time(NULL));
-	int count = 1 << (rand() % 2 + 4);
+	int count = 1 << (rand() % 2 + 1);
 	double chordLength = basicChordLength;
 	vector<Chord> combo;
 	combo.push_back(Chord(getNoteFrequencyByIndex(tonicChord, 1), MINOR));
-	combo.push_back(Chord(getNoteFrequencyByIndex(tonicChord, 6), MAJOR));
+	combo.push_back(Chord(getNoteFrequencyByIndex(tonicChord, -1), MAJOR));
 	combo.push_back(Chord(getNoteFrequencyByIndex(tonicChord, 3), MAJOR));
 	combo.push_back(Chord(getNoteFrequencyByIndex(tonicChord, 7), MAJOR));
 	for (int i = 0; i < count; i++){
@@ -145,7 +157,7 @@ vector<pair<Note, double> > Generator1::generateAccompanement(const vector<pair<
 	}
 
 	for (int i = 0; i < accompanement.size(); i++){
-		accompanement[i].first.setVolume(accompanement[i].first.getVolume() / 2);
+		accompanement[i].first.setVolume(accompanement[i].first.getVolume() / 3);
 	}
 
 	return accompanement;
@@ -154,8 +166,32 @@ vector<pair<Note, double> > Generator1::generateAccompanement(const vector<pair<
 vector<pair<Note, double> > Generator1::generateMaintheme(const vector<pair<Chord, double> >& chords) const{
 	vector<pair<Note, double> > maintheme;
 	double baseVolume = MAX_AMPLITUDE / 4;
-	vector<pair<int, double> > baseSequence;
-	
+	double guaranteedVolume = baseVolume * 0.7;
+	vector<pair<double, Note> > baseSequence;
+	int sampleDegree = 3;
+	baseSequence.resize(1 << sampleDegree);
+	for (int i = 0; i < baseSequence.size(); i++){
+		if (i > 0)
+			baseSequence[i] = make_pair(basicChordLength * i / baseSequence.size(),	//all is ok, don't worry
+										Note((1 << (sampleDegree - 1)) - abs((1 << (sampleDegree - 1)) - i),
+											1.0 * basicChordLength / (1 << sampleDegree), 
+											guaranteedVolume + (baseVolume - guaranteedVolume) *
+											getCountOfTrailingZeroes(i) / sampleDegree));
+		else
+			baseSequence[i] = make_pair(basicChordLength * i / baseSequence.size(),
+										Note((1 << (sampleDegree - 1)) - abs((1 << (sampleDegree - 1)) - i),
+											1.0 * basicChordLength / (1 << sampleDegree), 
+											baseVolume));
+	}
+	for (int i = 0; i < chords.size(); i++){
+		for (int j = 0; j < baseSequence.size(); j++){
+			maintheme.push_back(make_pair(
+				Note(getNoteFrequencyByIndex(chords[i].first, baseSequence[j].second.getFrequency() + 1),
+					baseSequence[j].second.getDuration(),
+					baseSequence[j].second.getVolume()),
+				chords[i].second + baseSequence[j].first));
+		}
+	}
 
 	return maintheme;
 }
