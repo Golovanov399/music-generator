@@ -148,7 +148,7 @@ vector<pair<Chord, double> > Generator1::generateChords(const Chord& tonicChord)
 	return chords;
 }
 
-vector<pair<Note, double> > Generator1::generateAccompanement(const vector<pair<Chord, double> >& chords) const{
+vector<pair<Note, double> > Generator1::generateAccompanement(AllChords) const{
 	vector<pair<Note, double> > accompanement;
 	for (int i = 0; i < chords.size(); i++){
 		for (int j = 1; j <= 5; j += 2){
@@ -163,7 +163,7 @@ vector<pair<Note, double> > Generator1::generateAccompanement(const vector<pair<
 	return accompanement;
 }
 
-vector<pair<Note, double> > Generator1::generateMaintheme(const vector<pair<Chord, double> >& chords) const{
+vector<pair<Note, double> > Generator1::generateMaintheme(AllChords) const{
 	vector<pair<Note, double> > maintheme;
 	double baseVolume = MAX_AMPLITUDE / 4;
 	double guaranteedVolume = baseVolume * 0.7;
@@ -186,7 +186,7 @@ vector<pair<Note, double> > Generator1::generateMaintheme(const vector<pair<Chor
 	for (int i = 0; i < chords.size(); i++){
 		for (int j = 0; j < baseSequence.size(); j++){
 			maintheme.push_back(make_pair(
-				Note(getNoteFrequencyByIndex(chords[i].first, baseSequence[j].second.getFrequency() + 1),
+				Note(getNoteFrequencyByIndex(tonicChord, baseSequence[j].second.getFrequency() + getNoteIndex(tonicChord, chords[i].first.getNote())),
 					baseSequence[j].second.getDuration(),
 					baseSequence[j].second.getVolume()),
 				chords[i].second + baseSequence[j].first));
@@ -199,8 +199,8 @@ vector<pair<Note, double> > Generator1::generateMaintheme(const vector<pair<Chor
 vector<pair<Note, double> > Generator::generateMelody() const{
 	Chord tonicChord(getNoteFrequency("A"), MINOR);
 	vector<pair<Chord, double> > chords = generateChords(tonicChord);
-	vector<pair<Note, double> > accompanement = generateAccompanement(chords);
-	vector<pair<Note, double> > maintheme = generateMaintheme(chords);
+	vector<pair<Note, double> > accompanement = generateAccompanement(allChords);
+	vector<pair<Note, double> > maintheme = generateMaintheme(allChords);
 	vector<pair<Note, double> > melody;
 	int leftIndex = 0, rightIndex = 0;
 	while (leftIndex < accompanement.size() || rightIndex < maintheme.size()){
