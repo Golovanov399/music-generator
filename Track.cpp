@@ -21,11 +21,11 @@ Track::Track(const std::vector<double>& wave)
 Track::Track(const Note& element, const Instrument& instrument)
 {
 	double duration = element.getDuration() * SECONDS_IN_BAR;
-	wave_.resize((int) ((duration + instrument.getReleaseTime()) * (double) SAMPLE_RATE));
+	wave_.resize((int) ((duration + instrument.getReleaseTime()) * (double) SAMPLE_RATE) + 1);
 	double frequency = (M_PI * 2.0 * element.getRealFrequency()) / (double) SAMPLE_RATE;
 	double volume = element.getVolume();
 	for (int i = 0; i < wave_.size(); ++i)
-		wave_[i] = instrument.getWaveValue(frequency, volume, i + 1, duration);
+		wave_[i] = instrument.getWaveValue(frequency, volume, i, duration);
 }
 
 Track::Track(const std::vector<std::pair<Note, double> >& sequence, const Instrument& instrument) // naive constructor;
@@ -52,11 +52,11 @@ double Track::getValue(int index) const
 Track Track::add(int offset, const Track& delta) const
 {
 	assert(offset <= (int) wave_.size());
-	std::vector<double> result(std::min((int) wave_.size(), (int) wave_.size() + delta.getLength() - offset), 0.0);
+	std::vector<double> result(std::max((int) wave_.size(), (int) wave_.size() + delta.getLength() - offset), 0.0);
 	for (int i = 0; i < (int) result.size(); i++)
 	{
 		result[i] = (i < (int) wave_.size() ? wave_[i] : 0.0);
-		if (i >= (int) wave_.size() - offset)
+		if (i >= (int) wave_.size() - offset && i < (int)(wave_.size() + delta.getLength()) - offset)
 			result[i] += delta.getValue(i - ((int) wave_.size() - offset));
 	}
 	return Track(result);
@@ -70,7 +70,7 @@ void Track::addToSelf(int offset, const Track& delta)
 		wave_.resize((int) wave_.size() + delta.getLength() - offset);
 	for (int i = OldWaveSize; i < (int) wave_.size(); ++i)
 		wave_[i] = 0;
-	for (int i = OldWaveSize - offset; i < (int) wave_.size(); ++i)
+	for (int i = OldWaveSize - offset; i < OldWaveSize - offset + (int)delta.getLength(); ++i)
 		wave_[i] += delta.getValue(i - (OldWaveSize - offset));
 }
 
@@ -79,7 +79,7 @@ void Track::normalize()
 	double mx = 0;
 	for (int i = 0; i < (int)wave_.size(); i++)
 		if (fabs(wave_[i]) > mx) mx = fabs(wave_[i]);
-	std::cerr << "asdasd " << mx << std::endl;
+	std::cerr << "Maximum absolute value : " << mx << std::endl;
 	if (mx > MAX_AMPLITUDE - 1)
 		for (int i = 0; i < (int)wave_.size(); i++)
 			wave_[i] *= ((MAX_AMPLITUDE - 1)/ mx);

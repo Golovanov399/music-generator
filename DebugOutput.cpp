@@ -8,7 +8,7 @@
 
 void printNote(FILE* OutputFile, const Note& note)
 {
-	fprintf(OutputFile, "%d %f %f", note.getFrequency(), note.getDuration(), note.getVolume());
+	fprintf(OutputFile, "%d %lf %lf", note.getFrequency(), note.getDuration(), note.getVolume());
 	return;
 }
 
@@ -53,9 +53,9 @@ void printTrack(FILE* OutputFile, const Track& track)
 {
 	int TrackLength = track.getLength();
 	for (int i = 0; i < TrackLength; ++i) {
-		fprintf(stderr, "%.6lf\n", track.getValue(i));
+//		fprintf(stderr, "%.6lf\n", track.getValue(i));
 		assert(fabs(track.getValue(i)) < MAX_AMPLITUDE);
-		fprintf(OutputFile, "%f\n", track.getValue(i));
+		fprintf(OutputFile, "%lf\n", track.getValue(i));
 	}
 }
 
