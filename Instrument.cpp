@@ -20,6 +20,12 @@ double Instrument::getReleaseTime() const
 
 double Instrument::ADSR(double time, double duration) const // time in seconds
 {
+	if (time > duration)
+	{
+		if (time <= duration + releaseTime_)
+			return (sustainLevel_ * (duration + releaseTime_ - time) / releaseTime_);
+		return 0;
+	}	
 	if (time <= attackTime_)
 		return (attackTime_ == 0 ? 1 : time / attackTime_);
 	if (time <= attackTime_ + decayTime_)
