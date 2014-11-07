@@ -16,6 +16,19 @@ void testADSR()
 	return;
 }
 
+Instrument testInstrument()
+{
+	double A, D, S, R;
+	std::vector<double> harm(0);
+	int size;
+	scanf("%d", &size);
+	harm.resize(size);
+	for (int i = 0; i < size; i++)
+		scanf("%lf", &harm[i]);
+	scanf("%lf%lf%lf%lf", &A, &D, &S, &R);
+	return Instrument(harm, A, D, S, R);
+}
+
 // int main()
 // {
 // 	testADSR();

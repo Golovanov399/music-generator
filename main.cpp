@@ -5,13 +5,14 @@
 #include "Instrument.h"
 #include "Track.h"
 #include "DebugOutput.h"
+#include "Test.h"
 
 int main()
 {
 	Generator1* gen = new Generator1();
 	std::vector<std::pair<Note, double> > Melody = gen->generateMelody();
 	delete gen;
-	FILE* OutputFile1 = fopen("NoteSequence.txt", "w");
+/*	FILE* OutputFile1 = fopen("NoteSequence.txt", "w");
 	printNoteSequence(OutputFile1, Melody);
 	fclose(OutputFile1);
 
@@ -28,7 +29,9 @@ int main()
 	FILE* OutputFile2 = fopen("Track.txt", "w");
 	printTrack(OutputFile2, MelodyTrack);
 	fclose(OutputFile2);
-	
+*/
+
+	Track MelodyTrack(Melody, testInstrument());	
 	MelodyTrack.drop();
 
 	return 0;
