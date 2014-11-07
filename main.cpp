@@ -16,10 +16,13 @@ int main()
 	fclose(OutputFile1);
 
 	Instrument noInstrument(std::vector<double>(0), 0.0, 0.0, 1.0, 0.0);
-	// Instrument unknownInstrument1(std::vector<double>(0), 0.2, 0.2, 0.3, 0.2);
+	vector<double> harmonics(10);
+	for (int i = 0; i < 10; i++)
+		harmonics[i] = (i & 2 ? (1.0 / (double)(i + 2)) : 0);
+	Instrument sawInstrument(harmonics, 0.0, 0.0, 1.0, 0.0);
 
-	Track MelodyTrack(Melody, noInstrument);
-	// Track MelodyTrack(Melody, unknownInstrument1);
+	// Track MelodyTrack(Melody, noInstrument);
+	Track MelodyTrack(Melody, sawInstrument);
 	MelodyTrack.normalize();
 
 	FILE* OutputFile2 = fopen("Track.txt", "w");

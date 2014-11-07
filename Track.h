@@ -6,7 +6,7 @@
 #include "Note.h"
 #include "Instrument.h"
 
-const double SECONDS_IN_BAR = 1.0;
+const double SECONDS_IN_BAR = 2;
 
 class Track
 {
