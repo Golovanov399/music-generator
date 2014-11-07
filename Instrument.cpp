@@ -18,23 +18,32 @@ double Instrument::getReleaseTime() const
 	return releaseTime_;
 }
 
+double Instrument::getAttackWaveValue(double time) const
+{
+	return (attackTime_ == 0 ? 1 : time / attackTime_);
+}
+
+double Instrument::getDecayWaveValue(double time) const
+{
+	return (1 - (1 - sustainLevel_) * time / decayTime_);
+}
+
+double Instrument::getReleaseWaveValue(double time) const
+{
+	if (time < releaseTime_)
+		return (sustainLevel_ * (releaseTime_ - time) / releaseTime_);
+	return 0;
+}
+
 double Instrument::ADSR(double time, double duration) const // time in seconds
 {
 	if (time > duration)
-	{
-		if (time <= duration + releaseTime_)
-			return (sustainLevel_ * (duration + releaseTime_ - time) / releaseTime_);
-		return 0;
-	}	
+		return getReleaseWaveValue(time - duration);
 	if (time <= attackTime_)
-		return (attackTime_ == 0 ? 1 : time / attackTime_);
+		return getAttackWaveValue(time);
 	if (time <= attackTime_ + decayTime_)
-		return (1 - (1 - sustainLevel_) * (time - attackTime_) / decayTime_);
-	if (time <= duration)
-		return sustainLevel_;
-	if (time <= duration + releaseTime_)
-		return (sustainLevel_ * (duration + releaseTime_ - time) / releaseTime_);
-	return 0;
+		return getDecayWaveValue(time - attackTime_);
+	return sustainLevel_;
 }
 
 double Instrument::getWaveValue(double frequency, double volume, double time, double duration) const // time in seconds/SAMPLE_RATE; duration in seconds
