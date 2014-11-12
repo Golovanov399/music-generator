@@ -3,7 +3,7 @@
 
 Note::Note()
 {
-  frequency_ = 440;
+  frequency_ = 9;
   duration_ = 1;
   volume_ = MAX_AMPLITUDE / 4;
 }
