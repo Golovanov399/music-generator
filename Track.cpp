@@ -18,14 +18,15 @@ Track::Track(const std::vector<double>& wave)
 		wave_[i] = wave[i];
 }
 
-Track::Track(const Note& element, const Instrument& instrument)
+Track::Track(const Note& element, const Instrument& instrument, double phase)
 {
 	double duration = element.getDuration() * SECONDS_IN_BAR;
-	wave_.resize((int) ((duration + instrument.getReleaseTime()) * (double) SAMPLE_RATE) + 1);
-	double frequency = (M_PI * 2.0 * element.getRealFrequency()) / (double) SAMPLE_RATE;
+	int waveSize = instrument.getRealDuration(duration) * (double) SAMPLE_RATE;
+	double frequency = (2.0 * M_PI * element.getRealFrequency()) / (double) SAMPLE_RATE;
 	double volume = element.getVolume();
-	for (int i = 0; i < wave_.size(); ++i)
-		wave_[i] = instrument.getWaveValue(frequency, volume, i, duration);
+	int time = 0; // time in seconds/SAMPLE_RATE
+	for (int time = 0; time <= waveSize; ++time)
+		wave_.push_back(instrument.getWaveValue(frequency, phase, volume, time, duration));
 }
 
 Track::Track(const std::vector<std::pair<Note, double> >& sequence, const Instrument& instrument) // naive constructor;
@@ -34,7 +35,8 @@ Track::Track(const std::vector<std::pair<Note, double> >& sequence, const Instru
 	for (int i = 0; i < (int)sequence.size(); i++)
 	{
 		int offset = (int) (sequence[i].second * SECONDS_IN_BAR * SAMPLE_RATE);
-		addToSelf((int) wave_.size() - offset, Track(sequence[i].first, instrument));
+		double phase = 2.0 * M_PI * sequence[i].first.getRealFrequency() * (sequence[i].second * SECONDS_IN_BAR);
+		addToSelf((int) wave_.size() - offset, Track(sequence[i].first, instrument, phase));
 	}
 }
 
