@@ -6,7 +6,7 @@
 #include "Note.h"
 #include "Instrument.h"
 
-const double SECONDS_IN_BAR = 2;
+const double SECONDS_IN_BAR = 2.0;
 
 class Track
 {
@@ -15,7 +15,7 @@ class Track
 public:
 	Track();
 	Track(const std::vector<double>& wave);
-	Track(const Note& element, const Instrument& instrument);
+	Track(const Note& element, const Instrument& instrument, double phase);
 	Track(const std::vector<std::pair<Note, double> >& sequence, const Instrument& instrument); // naive constructor;
 	int getLength() const;
 	double getValue(int index) const;
