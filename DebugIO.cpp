@@ -1,9 +1,9 @@
 #include <cassert>
 #include <cmath>
-#include <cstdio>
+#include <iostream>
 #include <fstream>
 #include <vector>
-#include "DebugOutput.h"
+#include "DebugIO.h"
 #include "Note.h"
 #include "Track.h"
 
@@ -67,10 +67,54 @@ void printTrack(std::ofstream* outputFile, const Track& track)
 	}
 }
 
-void scanNoteSequence(FILE* inputFile, std::vector<std::pair<Note, double> >& NoteSequence)
+std::vector<std::pair<Note, double> > scanNoteSequence(std::istream* inputFile)
 {
-	int NoteFrequency;
-	double NoteDuration, Amplitude, Position;
-	while (fscanf(inputFile, "%d%lf%lf%lf", &NoteFrequency, &NoteDuration, &Amplitude, &Position) == 4)
-	        NoteSequence.push_back(std::make_pair(Note(NoteFrequency, NoteDuration, Amplitude), Position));
+	int numberOfNotes;
+	(*inputFile)>>numberOfNotes;
+
+	std::vector<std::pair<Note, double> > noteSequence;
+	for (int i = 0; i < numberOfNotes; ++i)
+	{
+		int Frequency;
+		double Duration, Amplitude, Position;
+		(*inputFile)>>Frequency>>Duration>>Amplitude>>Position;
+	        noteSequence.push_back(std::pair<Note, double>(Note(Frequency, Duration, Amplitude), Position));
+	}
+
+	return noteSequence;
+}
+
+Instrument scanInstrument(std::istream* inputFile)
+{
+	int numberOfHarmonics;
+	(*inputFile)>>numberOfHarmonics;
+
+	std::map<double, double> harmonics;
+	for (int i = 0; i < numberOfHarmonics; ++i)
+	{
+		double harmonic, harmonicIndex;
+		(*inputFile)>>harmonic>>harmonicIndex;
+		harmonics[harmonic] = harmonicIndex;
+	}	
+
+	double A, D, S, R;
+	(*inputFile)>>A>>D>>S>>R;
+
+	return Instrument(harmonics, A, D, S, R);
+}
+
+Piano scanPiano(std::istream* inputFile)
+{
+	int numberOfHarmonics;
+	(*inputFile)>>numberOfHarmonics;
+
+	std::map<double, double> harmonics;
+	for (int i = 0; i < numberOfHarmonics; ++i)
+	{
+		double harmonic, harmonicIndex;
+		(*inputFile)>>harmonic>>harmonicIndex;
+		harmonics[harmonic] = harmonicIndex;
+	}	
+
+	return Piano(harmonics, 0.003, 0, 1.0, 0.25);
 }
