@@ -6,7 +6,7 @@
 
 Instrument::Instrument() :
 	modulationIndex0_(0),
-	modulationFrequency_(0),
+	modulationRatio_(0),
 	attackTime_(MIN_ATTACK),
 	decayTime_(0),
 	sustainLevel_(1.0),
@@ -18,7 +18,7 @@ Instrument::Instrument() :
 Instrument::Instrument(const std::map<double, double>& harmonics) :
 	harmonics_(harmonics),
 	modulationIndex0_(0),
-	modulationFrequency_(0),
+	modulationRatio_(0),
 	attackTime_(MIN_ATTACK),
 	decayTime_(0),
 	sustainLevel_(1.0),
@@ -28,7 +28,7 @@ Instrument::Instrument(const std::map<double, double>& harmonics) :
 
 Instrument::Instrument(double attackTime, double decayTime, double sustainLevel, double releaseTime) :
 	modulationIndex0_(0),
-	modulationFrequency_(0),
+	modulationRatio_(0),
 	attackTime_(attackTime),
 	decayTime_(decayTime),
 	sustainLevel_(sustainLevel),
@@ -40,7 +40,7 @@ Instrument::Instrument(double attackTime, double decayTime, double sustainLevel,
 Instrument::Instrument(const std::map<double, double>& harmonics, double attackTime, double decayTime, double sustainLevel, double releaseTime) :
 	harmonics_(harmonics),
 	modulationIndex0_(0),
-	modulationFrequency_(0),
+	modulationRatio_(0),
 	attackTime_(attackTime),
 	decayTime_(decayTime),
 	sustainLevel_(sustainLevel),
@@ -49,19 +49,54 @@ Instrument::Instrument(const std::map<double, double>& harmonics, double attackT
 
 Instrument::Instrument( const std::map<double, double>& harmonics,
 			double modulationIndex,
-			double modulationFrequency,
+			double modulationRatio,
 			double attackTime,
 			double decayTime,
 			double sustainLevel,
 			double releaseTime) :
 	harmonics_(harmonics),
 	modulationIndex0_(modulationIndex),
-	modulationFrequency_(modulationFrequency),
+	modulationRatio_(modulationRatio),
 	attackTime_(attackTime),
 	decayTime_(decayTime),
 	sustainLevel_(sustainLevel),
 	releaseTime_(releaseTime)
 { }
+
+std::map<double, double> Instrument::getHarmonics() const
+{
+	return harmonics_;
+}
+
+double Instrument::getModulationIndex0() const
+{
+	return modulationIndex0_;
+}
+
+double Instrument::getModulationRatio() const	
+{
+	return modulationRatio_;
+}
+
+double Instrument::getAttackTime() const
+{
+	return attackTime_;
+}
+
+double Instrument::getDecayTime() const
+{
+	return decayTime_;
+}
+
+double Instrument::getSustainLevel() const
+{
+	return sustainLevel_;
+}
+
+double Instrument::getReleaseTime() const
+{
+	return releaseTime_;
+}
 
 const std::map<double, double> Instrument::sawHarmonics(int numberOfHarmonics)
 {
@@ -142,8 +177,9 @@ double Instrument::getWaveValue(double frequency,
 	for (auto harmonic : harmonics_)
 		waveValue += (harmonic.second * sin(
 		     	      harmonic.first * frequency * time +
-		     	      getModuloIndexValue(timeInSeconds, duration) * sin(modulationFrequency_ * frequency * time) +
+		     	      getModuloIndexValue(timeInSeconds, duration) * sin(modulationRatio_ * frequency * time) +
 		     	      phase));
+	//fprintf(stderr, "%f\n", ADSR(frequency, timeInSeconds, duration));
 	return ADSR(frequency, timeInSeconds, duration) * volume * waveValue;
 }
 
@@ -209,8 +245,8 @@ double windInstrument::getDecayVolume(double time) const
 	return sustainLevel_ + (1.0 - sustainLevel_) * sin(M_PI / 2.0 * (1.0 + time / decayTime_));
 }
 
-Bell::Bell(double decayTime, double modulationIndex, double modulationFrequency)
-     : Instrument(Instrument::triangleHarmonics(11), 0, decayTime, 0, 0)
+Bell::Bell(double decayTime, double modulationIndex, double modulationRatio)
+     : Instrument(Instrument::triangleHarmonics(11), modulationIndex, modulationRatio, 0, decayTime, 0, 0)
 { }
 
 double Bell::getRealDuration(double duration) const
