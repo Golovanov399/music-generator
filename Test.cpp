@@ -1,7 +1,13 @@
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <map>
 #include <vector>
+#include "DebugOutput.h"
 #include "Instrument.h"
 #include "Track.h"
 #include "Test.h"
@@ -16,20 +22,60 @@ void testADSR()
 	return;
 }
 
-Instrument testInstrument()
+void testInstrument()
 {
+	std::string testName;
+	std::cin>>testName;
+
+	int numberOfHarmonics;
+	std::cin>>numberOfHarmonics;
+	std::map<double, double> harmonics;
+	for (int i = 0; i < numberOfHarmonics; ++i)
+	{
+		double harmonic, harmonicIndex;
+		std::cin>>harmonic>>harmonicIndex;
+		harmonics[harmonic] = harmonicIndex;
+	}	
 	double A, D, S, R;
-	std::map<double, double> harm;
-	int size;
-	scanf("%d", &size);
-	for (int i = 0; i < size; i++)
-		scanf("%lf", &harm[i]);
-	scanf("%lf%lf%lf%lf", &A, &D, &S, &R);
-	return Instrument(harm, A, D, S, R);
+	std::cin>>A>>D>>S>>R;
+	Instrument instrument(harmonics, A, D, S, R);
+
+	std::vector<std::pair<Note, double> > Melody(1, std::pair<Note, double>(Note(9, 1.0, 25), 0));
+
+	Track melodyTrack(Melody, instrument);
+	melodyTrack.normalize();
+	
+	std::ofstream outputFile1(testName + " track.txt", std::ofstream::out);
+	printTrack(&outputFile1, melodyTrack);
+
+	//std::ofstream outputFile2(testName + " sample.wav", std::ofstream::binary);
+	melodyTrack.drop(&(testName + " sample.wav")[0]);
 }
 
-// int main()
-// {
-// 	testADSR();
-// 	return 0;	
-// }
+void testPiano()
+{
+	std::string testName;
+	std::cin>>testName;
+
+	int numberOfHarmonics;
+	std::cin>>numberOfHarmonics;
+	std::map<double, double> harmonics;
+	for (int i = 0; i < numberOfHarmonics; ++i)
+	{
+		double harmonic, harmonicIndex;
+		std::cin>>harmonic>>harmonicIndex;
+		harmonics[harmonic] = harmonicIndex;
+	}	
+	Piano piano(harmonics, 0.003, 0, 1.0, 0.247);
+
+	std::vector<std::pair<Note, double> > Melody(1, std::pair<Note, double>(Note(9, 0.003, 25), 0));
+
+	Track melodyTrack(Melody, piano);
+	melodyTrack.normalize();
+	
+	std::ofstream outputFile1(testName + " track.txt", std::ofstream::out);
+	printTrack(&outputFile1, melodyTrack);
+
+	//std::ofstream outputFile2(testName + " sample.wav", std::ofstream::binary);
+	melodyTrack.drop(&(testName + " sample.wav")[0]);
+}
