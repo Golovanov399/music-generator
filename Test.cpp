@@ -32,8 +32,8 @@ void testInstrument()
 	Track melodyTrack(Melody, instrument);
 	melodyTrack.normalize();
 	
-	std::ofstream outputFile1(testName + " track.txt", std::ofstream::out);
-	printTrack(&outputFile1, melodyTrack);
+	std::ofstream outputFile1(testName + ".txt", std::ofstream::out);
+	printInstrument(&outputFile1, instrument);
 
 	//std::ofstream outputFile2(testName + " sample.wav", std::ofstream::binary);
 	melodyTrack.drop(&(testName + " sample.wav")[0]);
@@ -51,8 +51,8 @@ void testPiano()
 	Track melodyTrack(Melody, piano);
 	melodyTrack.normalize();
 	
-	std::ofstream outputFile1(testName + " track.txt", std::ofstream::out);
-	printTrack(&outputFile1, melodyTrack);
+	std::ofstream outputFile1(testName + ".txt", std::ofstream::out);
+	printInstrument(&outputFile1, piano);
 
 	//std::ofstream outputFile2(testName + " sample.wav", std::ofstream::binary);
 	melodyTrack.drop(&(testName + " sample.wav")[0]);
