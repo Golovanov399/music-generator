@@ -15,7 +15,7 @@ class Instrument
 protected:
 	std::map<double, double> harmonics_;
 	double modulationIndex0_;
-	double modulationFrequency_;	
+	double modulationRatio_;	
 	double attackTime_;
 	double decayTime_;
 	double sustainLevel_;
@@ -25,11 +25,19 @@ public:
 	Instrument(const std::map<double, double>& harmonics);
 	Instrument(double attackTime, double decayTime, double sustainLevel, double releaseTime);
 	Instrument(const std::map<double, double>& harmonics, double attackTime, double decayTime, double sustainLevel, double releaseTime);
-	Instrument(const std::map<double, double>& harmonics, double modulationIndex, double modulationFrequency, double attackTime, double decayTime, double sustainLevel, double releaseTime);
+	Instrument(const std::map<double, double>& harmonics, double modulationIndex, double modulationRatio, double attackTime, double decayTime, double sustainLevel, double releaseTime);
 
 	static const std::map<double, double> sawHarmonics(int numberOfHarmonics);
 	static const std::map<double, double> squareHarmonics(int numberOfHarmonics);
 	static const std::map<double, double> triangleHarmonics(int numberOfHarmonics);
+
+	std::map<double, double> getHarmonics() const;
+	double getModulationIndex0() const;
+	double getModulationRatio() const;	
+	double getAttackTime() const;
+	double getDecayTime() const;
+	double getSustainLevel() const;
+	double getReleaseTime() const;
 
 	virtual double getRealDuration(double duration) const;
 	virtual double getAttackVolume(double time) const;
@@ -70,7 +78,7 @@ public:
 class Bell: public Instrument
 {
 public:
-	Bell(double decayTime, double modulationIndex, double modulationFrequency);
+	Bell(double decayTime, double modulationIndex, double modulationRatio);
 
 	double getRealDuration(double duration) const override;
 	double getDecayVolume(double time) const override;
