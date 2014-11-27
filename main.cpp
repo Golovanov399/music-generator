@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <fstream>
 #include <string>
 #include <vector>
 #include "Generator.h"
@@ -11,23 +12,19 @@ int main()
 {
 	Generator1 gen;
 	std::vector<std::pair<Note, double> > Melody = gen.generateMelody();
-/*
-	std::vector<std::pair<Note, double> > Melody;
-	Melody.push_back(std::pair<Note, double>(Note(9, 1.0, 25), 0));
-	//Melody.push_back(std::pair<Note, double>(Note(10, 1.0, 25), 1));
-*/
-	FILE* OutputFile1 = fopen("NoteSequence.txt", "w");
-	printNoteSequence(OutputFile1, Melody);
-	fclose(OutputFile1);
 
-	Track MelodyTrack(Melody, Instrument());
+	std::ofstream OutputFile1("NoteSequence.txt", std::ofstream::out);
+	printNoteSequence(&OutputFile1, Melody);
+
+	Track MelodyTrack(Melody, windInstrument(windInstrument::fluteHarmonics(), 0.125, 0, 1.0, 0.01));
 	MelodyTrack.normalize();
 
-	FILE* OutputFile2 = fopen("Track.txt", "w");
-	printTrack(OutputFile2, MelodyTrack);
-	fclose(OutputFile2);
+	std::ofstream OutputFile2("Track.txt", std::ofstream::out);
+	printTrack(&OutputFile2, MelodyTrack);
 
-	MelodyTrack.drop();
+	MelodyTrack.drop("sample.wav");
+
+	//testPiano();
 
 	return 0;
 }
