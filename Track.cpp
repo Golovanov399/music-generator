@@ -1,6 +1,7 @@
 #include <cassert>
 #include <cmath>
 #include <cstdio>
+#include <fstream>
 #include <iostream>
 #include "Note.h"
 #include "Instrument.h"
@@ -87,7 +88,7 @@ void Track::normalize()
 			wave_[i] *= ((MAX_AMPLITUDE - 1)/ mx);
 }
 
-void Track::drop() const
+void Track::drop(const char* outputFileName) const
 {
 	int	chunk_id = 0x46464952; // RIFF
 	int	chunk_size;
@@ -104,7 +105,7 @@ void Track::drop() const
 	int	subchunk2_size = wave_.size() * num_channels * bits_per_sample / 8;
 		chunk_size = 4 + (8 + subchunk1_size) + (8 + subchunk2_size);
 
-	FILE* p_file = fopen("sample.wav", "wb");
+	FILE* p_file = fopen(outputFileName, "wb");
 
 	fwrite(&chunk_id, sizeof(int), 1, p_file);	
 	fwrite(&chunk_size, sizeof(int), 1, p_file);
@@ -118,12 +119,12 @@ void Track::drop() const
 	fwrite(&block_align, sizeof(short), 1, p_file);
 	fwrite(&bits_per_sample, sizeof(short), 1, p_file);
 	fwrite(&subchunk2_id, sizeof(int), 1, p_file);
-	fwrite(&subchunk2_size, sizeof(int), 1, p_file);
-	
-	for (int i = 0; i < (int)wave_.size(); i++)
+	fwrite(&subchunk2_size, sizeof(int), 1, p_file);	
+	for (int i = 0; i < (int) wave_.size(); i++)
 	{
-		short v = (short)(wave_[i] * 32767 / MAX_AMPLITUDE);
+		short v = (short) (wave_[i] * 32767 / MAX_AMPLITUDE);
 		fwrite(&v, sizeof(short), 1, p_file);
 	}
+
 	fclose(p_file);
 }
