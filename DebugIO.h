@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdio>
+#include <iostream>
 #include <fstream>
 #include <vector>
 #include "Note.h"
@@ -13,4 +13,7 @@ void printNoteSequence(std::ofstream* outputFile, const std::vector<std::pair<No
 void printChordSequence(std::ofstream* outputFile, const std::vector<std::pair<Chord, double> >& ChordSequence);
 void printInstrument(std::ofstream* outputFile, const Instrument& instrument);
 void printTrack(std::ofstream* outputFile, const Track& track);
-void scanNoteSequence(FILE* inputFile, std::vector<std::pair<Note, double> >& NoteSequence);
+
+std::vector<std::pair<Note, double> > scanNoteSequence(std::istream* inputFile);
+Instrument scanInstrument(std::istream* inputFile);
+Piano scanPiano(std::istream* inputFile);
