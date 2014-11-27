@@ -1,7 +1,6 @@
-#ifndef __Track__
+#pragma once
 
-#define __Track__
-
+#include <fstream>
 #include <vector>
 #include "Note.h"
 #include "Instrument.h"
@@ -23,7 +22,5 @@ public:
 	Track add(int offset, const Track& delta) const;
 	void addToSelf(int offset, const Track& delta);
 	void normalize();
-	void drop() const;
+	void drop(const char* outputFileName) const;
 };
-
-#endif
