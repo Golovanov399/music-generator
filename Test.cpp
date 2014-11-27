@@ -1,13 +1,11 @@
 #include <cmath>
-#include <cstdio>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <cstring>
 #include <map>
 #include <vector>
-#include "DebugOutput.h"
+#include "DebugIO.h"
 #include "Instrument.h"
 #include "Track.h"
 #include "Test.h"
@@ -27,18 +25,7 @@ void testInstrument()
 	std::string testName;
 	std::cin>>testName;
 
-	int numberOfHarmonics;
-	std::cin>>numberOfHarmonics;
-	std::map<double, double> harmonics;
-	for (int i = 0; i < numberOfHarmonics; ++i)
-	{
-		double harmonic, harmonicIndex;
-		std::cin>>harmonic>>harmonicIndex;
-		harmonics[harmonic] = harmonicIndex;
-	}	
-	double A, D, S, R;
-	std::cin>>A>>D>>S>>R;
-	Instrument instrument(harmonics, A, D, S, R);
+	Instrument instrument = scanInstrument(&std::cin);
 
 	std::vector<std::pair<Note, double> > Melody(1, std::pair<Note, double>(Note(9, 1.0, 25), 0));
 
@@ -57,16 +44,7 @@ void testPiano()
 	std::string testName;
 	std::cin>>testName;
 
-	int numberOfHarmonics;
-	std::cin>>numberOfHarmonics;
-	std::map<double, double> harmonics;
-	for (int i = 0; i < numberOfHarmonics; ++i)
-	{
-		double harmonic, harmonicIndex;
-		std::cin>>harmonic>>harmonicIndex;
-		harmonics[harmonic] = harmonicIndex;
-	}	
-	Piano piano(harmonics, 0.003, 0, 1.0, 0.247);
+	Piano piano = scanPiano(&std::cin);
 
 	std::vector<std::pair<Note, double> > Melody(1, std::pair<Note, double>(Note(9, 0.003, 25), 0));
 
