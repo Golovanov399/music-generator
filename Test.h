@@ -3,4 +3,5 @@
 #include <cstdlib>
 
 void testADSR();
-Instrument testInstrument();
+void testInstrument();
+void testPiano();
