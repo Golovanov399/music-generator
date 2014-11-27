@@ -1,11 +1,11 @@
-#include <cstdio>
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <vector>
 #include "Generator.h"
 #include "Instrument.h"
 #include "Track.h"
-#include "DebugOutput.h"
+#include "DebugIO.h"
 #include "Test.h"
 
 int main()
@@ -24,6 +24,7 @@ int main()
 
 	MelodyTrack.drop("sample.wav");
 
+	//testInstrument();
 	//testPiano();
 
 	return 0;
