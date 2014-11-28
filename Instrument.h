@@ -39,10 +39,10 @@ public:
 	double getSustainLevel() const;
 	double getReleaseTime() const;
 
-	virtual double getRealDuration(double duration) const;
+	double getRealDuration(double duration) const;
 	virtual double getAttackVolume(double time) const;
 	virtual double getDecayVolume(double time) const;
-	virtual double getReleaseVolume(double time) const;
+	virtual double getReleaseVolume(double lastLevel, double time) const;
 	
 	double ADSR(double frequency, double time, double duration) const;	
 	double getModuloIndexValue(double time, double duration) const;
@@ -53,13 +53,13 @@ public:
 class Piano: public Instrument
 {
 public:
-	Piano(double attackTime, double decayTime, double sustainLevel, double releaseTime);
-	Piano(const std::map<double, double>& harmonics, double attackTime, double decayTime, double sustainLevel, double releaseTime);
+	Piano(double attackTime, double releaseTime);
+	Piano(const std::map<double, double>& harmonics, double attackTime, double releaseTime);
 
 	static const std::map<double, double> pianoHarmonics();
 
-	double getDecayVolume(double time) const override;
-	double getReleaseVolume(double time) const override;
+	double getAttackVolume(double time) const override;
+	double getReleaseVolume(double lastLevel, double time) const override;
 };
 
 class windInstrument : public Instrument
@@ -78,8 +78,7 @@ public:
 class Bell: public Instrument
 {
 public:
-	Bell(double decayTime, double modulationIndex, double modulationRatio);
+	Bell(double releaseTime, double modulationIndex, double modulationRatio);
 
-	double getRealDuration(double duration) const override;
-	double getDecayVolume(double time) const override;
+	double getReleaseVolume(double lastLevel, double time) const override;
 };
