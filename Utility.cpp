@@ -15,10 +15,10 @@ Oscillator::Oscillator() :
 	updatePhaseIncrement();
 }
 
-Oscillator::Oscillator(const double &sample_rate,
+Oscillator::Oscillator(	const double &sample_rate,
 			const double &frequency,
 			const double &phase) :
-			w_(TWO_PI * sample_rate),
+			w_(TWO_PI / sample_rate),
 			frequency_(frequency),
 			phase_(phase)
 {
@@ -45,8 +45,8 @@ void Oscillator::setPhase(const double &value)
 }
 
 void Oscillator::setAll(const double &sample_rate_value,
-		const double &frequency_value,
-		const double &phase_value)
+			const double &frequency_value,
+			const double &phase_value)
 {
 	w_ = TWO_PI / sample_rate_value;
 	frequency_ = frequency_value;
@@ -78,10 +78,10 @@ SineOscillator::SineOscillator() : Oscillator()
 {
 }
 
-SineOscillator::SineOscillator(const double &sample_rate,
+SineOscillator::SineOscillator(	const double &sample_rate,
 				const double &frequency,
 				const double &phase) :
-			Oscillator(sample_rate, frequency, phase)
+				Oscillator(sample_rate, frequency, phase)
 {
 }
 

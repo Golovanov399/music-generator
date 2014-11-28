@@ -12,16 +12,16 @@ protected :
 	void updatePhaseIncrement();
 public :
 	Oscillator();
-	Oscillator(const double &sample_rate,
-		const double &frequency,
-		const double &phase);
+	Oscillator(	const double &sample_rate,
+			const double &frequency,
+			const double &phase);
 	~Oscillator();
 	void setSampleRate(const double &value);
 	void setFrequency(const double &value);
 	void setPhase(const double &value);
-	void setAll(const double &sample_rate_value,
-		const double &frequency_value,
-		const double &phase_value);
+	void setAll(	const double &sample_rate_value,
+			const double &frequency_value,
+			const double &phase_value);
 	double getSampleRate() const;
 	double getFrequency() const;
 	double getPhase() const;
@@ -33,7 +33,7 @@ class SineOscillator : public Oscillator
 {
 public :
 	SineOscillator();
-	SineOscillator(const double &sample_rate,
+	SineOscillator(	const double &sample_rate,
 			const double &frequency,
 			const double &phase);
 	double getModifier() const;
