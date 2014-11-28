@@ -7,6 +7,7 @@
 #include "Track.h"
 #include "DebugIO.h"
 #include "Test.h"
+#include "Effects.h"
 
 int main()
 {
@@ -16,7 +17,9 @@ int main()
 	std::ofstream OutputFile1("NoteSequence.txt", std::ofstream::out);
 	printNoteSequence(&OutputFile1, Melody);
 
-	Track melodyTrack(Melody, Piano(0.01, 0.5));
+	Track melodyTrack(Melody, Instrument(Instrument::sawHarmonics(10)));
+	Echo echo(0.0, 0.5, 0.2);
+	echo.applyEffect(melodyTrack);
 	melodyTrack.normalize();
 
 	std::ofstream OutputFile2("Track.txt", std::ofstream::out);

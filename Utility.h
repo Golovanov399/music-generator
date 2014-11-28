@@ -4,13 +4,13 @@
 
 class Oscillator
 {
-protected:
+protected :
         double w_; // 2*PI / SAMPLE_RATE;
 	double frequency_;
 	double phase_;
 	double phase_increment_;
 	void updatePhaseIncrement();
-public:
+public :
 	Oscillator();
 	Oscillator(const double &sample_rate,
 		const double &frequency,
@@ -31,7 +31,11 @@ public:
 
 class SineOscillator : public Oscillator
 {
-public:
+public :
+	SineOscillator();
+	SineOscillator(const double &sample_rate,
+			const double &frequency,
+			const double &phase);
 	double getModifier() const;
 };
 

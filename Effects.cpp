@@ -1,4 +1,5 @@
 #include <vector>
+#include <iostream>
 #include "Utility.h"
 #include "Effects.h"
 #include "CValues.h"
@@ -61,8 +62,16 @@ double Effect::getPower() const
 	return power_;
 }
 
+Echo::Echo(const double &start,
+		const double &duration,
+		const double &power) :
+		Effect(start, duration, power)
+{
+}
+
 void Echo::applyEffect(Track &sample) const
 {
+	std::cerr << start_ << ' ' << duration_ << ' ' << power_ << std::endl;
 	size_t buffer_size = (size_t)(duration_ * SAMPLE_RATE),
 		buffer_ptr = 0,
 		start = (size_t)(start_ * SAMPLE_RATE);
@@ -74,5 +83,6 @@ void Echo::applyEffect(Track &sample) const
 		double tmp = sample.getValue(i);
 		sample.modifyValue(i, power_ * buffer[buffer_ptr]);
 		buffer[buffer_ptr] = tmp;
+		buffer_ptr = (buffer_ptr + 1) % buffer_size;
 	}
 }

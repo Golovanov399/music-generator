@@ -30,6 +30,10 @@ public :
 
 class Echo : public Effect
 {
+public :
+	Echo(const double &start,
+		const double &duration,
+		const double &power);
 	void applyEffect(Track &sample) const;
 };
 

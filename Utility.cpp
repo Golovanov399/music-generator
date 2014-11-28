@@ -74,6 +74,17 @@ void Oscillator::incrementPhase()
 	phase_ += phase_increment_;
 }
 
+SineOscillator::SineOscillator() : Oscillator()
+{
+}
+
+SineOscillator::SineOscillator(const double &sample_rate,
+				const double &frequency,
+				const double &phase) :
+			Oscillator(sample_rate, frequency, phase)
+{
+}
+
 double SineOscillator::getModifier() const
 {
 	return sin(phase_);	
