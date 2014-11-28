@@ -6,6 +6,7 @@
 #include <string>
 #include "Note.h"
 
+// FixMe: no. just no.
 #define AllChords const vector<pair<Chord, double> >& chords, const Chord& tonicChord
 #define allChords chords, tonicChord
 
@@ -27,8 +28,9 @@ public:
 	~Generator(){}
 	vector<pair<Note, double> > generateMelody() const;
 
+  // FixMe: use typedefs
 	virtual vector<pair<Chord, double> > generateChords(const Chord& tonicChord) const = 0;
-	virtual vector<pair<Note, double> > generateAccompanement(AllChords) const = 0;
+	virtual vector<pair<Note, double> > generateAccompaniment(AllChords) const = 0;
 	virtual vector<pair<Note, double> > generateMaintheme(AllChords) const = 0;
 };
 
@@ -37,7 +39,7 @@ public:
 	Generator1(){}
 	~Generator1(){}
 	vector<pair<Chord, double> > generateChords(const Chord& tonicChord) const;
-	vector<pair<Note, double> > generateAccompanement(AllChords) const;
+	vector<pair<Note, double> > generateAccompaniment(AllChords) const;
 	vector<pair<Note, double> > generateMaintheme(AllChords) const;
 };
 
