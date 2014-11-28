@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <string>
 #include <ctime>
+#include <map>
 #include "Generator.h"
 #include "Note.h"
 
@@ -9,22 +10,20 @@ using namespace std;
 using namespace generator;
 
 int getCountOfTrailingZeroes(int x){
-	//to be replaced by __builtin_
-	if (!x)
+	if (x)
+		return __builtin_ctz(x);
+	else
 		return -1;
-	int count = 0;
-	while (!(x & 1)){
-		count++;
-		x >>= 1;
-	}
-	return count;
 }
 
 int generator::getNoteFrequency(const string& noteName, int octave = 0) {
 	int currentFrequency = 0;
+  // FixMe: do not use switch for this purpose:
+  // static const std::map<char, int> note2freq = { { 'C', 0 }, ... };
 	switch (noteName[0]){
 		case 'C':
 			currentFrequency = 0;
+      // FixMe: no breaks!
 		case 'D':
 			currentFrequency = 2;
 		case 'E':
@@ -39,6 +38,7 @@ int generator::getNoteFrequency(const string& noteName, int octave = 0) {
 			currentFrequency = 10;
 		case 'H':
 			currentFrequency = 11;
+    // FixMe: default?
 	}
 	if (noteName.length() > 1){
 		if (noteName[1] == '#'){
@@ -66,6 +66,7 @@ int generator::getNoteFrequencyByIndex(const Chord& tonicChord, int index){
 		index -= 7;
 	}
 	int baseFrequency = tonicChord.getNote().getFrequency() + octave * 12;
+  // FixMe: do not use switches for this
 	if (tonicChord.getMode() == MAJOR){
 		switch(index){
 			case 1:
@@ -130,10 +131,10 @@ vector<pair<Chord, double> > Generator1::generateChords(const Chord& tonicChord)
 	/* 	Each element of vector<pair<Chord, double>>
 		is a pair of a Chord and its appearance time
 	*/
-	vector<pair<Chord, double> > chords;
+	vector<pair<Chord, double> > chords;  // FixMe: may use simply >>
 	int tonicFrequency = tonicChord.getNote().getFrequency();
 	srand(time(NULL));
-	int count = 1 << (rand() % 2 + 1);
+	int count = 1 << (rand() % 2 + 1);  // FixMe: too complicated
 	double chordLength = basicChordLength;
 	vector<Chord> combo;
 	combo.push_back(Chord(getNoteFrequencyByIndex(tonicChord, 1), MINOR));
@@ -148,6 +149,7 @@ vector<pair<Chord, double> > Generator1::generateChords(const Chord& tonicChord)
 	return chords;
 }
 
+// FixMe: accompanIment, not accompanEment. Respect grammar.
 vector<pair<Note, double> > Generator1::generateAccompanement(AllChords) const{
 	vector<pair<Note, double> > accompanement;
 	for (int i = 0; i < chords.size(); i++){
@@ -171,7 +173,8 @@ vector<pair<Note, double> > Generator1::generateMaintheme(AllChords) const{
 	int sampleDegree = 3;
 	baseSequence.resize(1 << sampleDegree);
 	for (int i = 0; i < baseSequence.size(); i++){
-		if (i > 0)
+    // FixMe: too complicated
+    if (i > 0)
 			baseSequence[i] = make_pair(basicChordLength * i / baseSequence.size(),	//all is ok, don't worry
 										Note((1 << (sampleDegree - 1)) - abs((1 << (sampleDegree - 1)) - i),
 											1.0 * basicChordLength / (1 << sampleDegree), 
