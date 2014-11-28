@@ -16,16 +16,27 @@ int main()
 	std::ofstream OutputFile1("NoteSequence.txt", std::ofstream::out);
 	printNoteSequence(&OutputFile1, Melody);
 
-	Track MelodyTrack(Melody, windInstrument(windInstrument::fluteHarmonics(), 0.125, 0, 1.0, 0.01));
-	MelodyTrack.normalize();
+	Track melodyTrack(Melody, Piano(0.01, 0.5));
+	melodyTrack.normalize();
 
 	std::ofstream OutputFile2("Track.txt", std::ofstream::out);
-	printTrack(&OutputFile2, MelodyTrack);
+	printTrack(&OutputFile2, melodyTrack);
 
-	MelodyTrack.drop("sample.wav");
+	melodyTrack.drop("sample.wav");
 
 	//testInstrument();
 	//testPiano();
 
+/*	for (int i = 1; i <= 21; ++i)
+	{	
+		std::ifstream infile("Piano" + std::to_string(i) + ".txt", std::ifstream::in);
+		Piano piano = scanPiano(&infile);
+		std::vector<std::pair<Note, double> > Melody(1, std::pair<Note, double>(Note(9, 0.003, 25), 0));
+		Track melodyTrack(Melody, piano);
+		melodyTrack.normalize();
+		std::ofstream OutputFile2("Piano" + std::to_string(i) + " track.txt", std::ofstream::out);
+		printTrack(&OutputFile2, melodyTrack);
+	}
+*/
 	return 0;
 }
