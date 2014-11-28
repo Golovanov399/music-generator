@@ -4,7 +4,6 @@
 #include <map>
 #include <vector>
 
-const int SAMPLE_RATE = 44100;
 const double MIN_ATTACK = 0.001;
 const double MIN_RELEASE = 0.001;
 const double MIN_RELEASE_LEVEL = 0.01;

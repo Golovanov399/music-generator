@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <vector>
 #include "Instrument.h"
+#include "CValues.h"
 
 Instrument::Instrument() :
 	modulationIndex0_(0),
@@ -249,12 +250,12 @@ const std::map<double, double> windInstrument::trumpetHarmonics()
 
 double windInstrument::getAttackVolume(double time) const
 {
-	return sin(M_PI * time / (2.0 * attackTime_));
+	return sin(PI * time / (2.0 * attackTime_));
 }
 
 double windInstrument::getDecayVolume(double time) const
 {
-	return sustainLevel_ + (1.0 - sustainLevel_) * sin(M_PI / 2.0 * (1.0 + time / decayTime_));
+	return sustainLevel_ + (1.0 - sustainLevel_) * sin(PI / 2.0 * (1.0 + time / decayTime_));
 }
 
 Bell::Bell(double releaseTime, double modulationIndex, double modulationRatio)

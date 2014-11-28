@@ -6,6 +6,7 @@
 #include "Note.h"
 #include "Instrument.h"
 #include "Track.h"
+#include "CValues.h"
 
 Track::Track()
 {
@@ -23,7 +24,7 @@ Track::Track(const Note& element, const Instrument& instrument, double phase)
 {
 	double duration = element.getDuration() * SECONDS_IN_BAR;
 	int waveSize = instrument.getRealDuration(duration) * (double) SAMPLE_RATE;
-	double frequency = (2.0 * M_PI * element.getRealFrequency()) / (double) SAMPLE_RATE;
+	double frequency = (TWO_PI * element.getRealFrequency()) / (double) SAMPLE_RATE;
 	double volume = element.getVolume();
 	int time = 0; // time in seconds/SAMPLE_RATE
 	for (int time = 0; time <= waveSize; ++time)
@@ -36,7 +37,7 @@ Track::Track(const std::vector<std::pair<Note, double> >& sequence, const Instru
 	for (int i = 0; i < (int)sequence.size(); i++)
 	{
 		int offset = (int) (sequence[i].second * SECONDS_IN_BAR * SAMPLE_RATE);
-		double phase = 2.0 * M_PI * sequence[i].first.getRealFrequency() * (sequence[i].second * SECONDS_IN_BAR);
+		double phase = TWO_PI * sequence[i].first.getRealFrequency() * (sequence[i].second * SECONDS_IN_BAR);
 		addToSelf((int) wave_.size() - offset, Track(sequence[i].first, instrument, phase));
 	}
 }
@@ -46,10 +47,17 @@ int Track::getLength() const
 	return wave_.size();
 }
 
-double Track::getValue(int index) const
+double Track::getValue(const size_t &index) const
 {
-	assert(0 <= index && index < (int) wave_.size());
+	assert(index < wave_.size());
 	return wave_[index];
+}
+
+void Track::modifyValue(const size_t &index,
+			const double &value)
+{
+	assert(index < wave_.size());
+	wave_[index] += value;
 }
 
 Track Track::add(int offset, const Track& delta) const
@@ -127,4 +135,9 @@ void Track::drop(const char* outputFileName) const
 	}
 
 	fclose(p_file);
+}
+
+void Track::resize(const size_t &size)
+{
+	wave_.resize(size);
 }
