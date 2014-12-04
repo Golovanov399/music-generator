@@ -3,6 +3,8 @@
 #include <string>
 #include <ctime>
 #include <map>
+#include <algorithm>
+#include <iostream>
 #include "Generator.h"
 #include "Note.h"
 
@@ -131,7 +133,7 @@ vector<pair<Chord, double> > Generator1::generateChords(const Chord& tonicChord)
 	/* 	Each element of vector<pair<Chord, double>>
 		is a pair of a Chord and its appearance time
 	*/
-	vector<pair<Chord, double> > chords;  // FixMe: may use simply >>
+	vector<pair<Chord, double> > chords;
 	int tonicFrequency = tonicChord.getNote().getFrequency();
 	srand(time(NULL));
 	int count = 1 << (rand() % 2 + 1);  // FixMe: too complicated	//ur mom is too complicated
@@ -166,6 +168,7 @@ vector<pair<Note, double> > Generator1::generateAccompaniment(AllChords) const{
 
 vector<pair<Note, double> > Generator1::generateMaintheme(AllChords) const{
 	vector<pair<Note, double> > maintheme;
+	
 	double baseVolume = MAX_AMPLITUDE / 4;
 	double guaranteedVolume = baseVolume * 0.7;
 	vector<pair<double, Note> > baseSequence;
@@ -191,6 +194,77 @@ vector<pair<Note, double> > Generator1::generateMaintheme(AllChords) const{
 					baseSequence[j].second.getDuration(),
 					baseSequence[j].second.getVolume()),
 				chords[i].second + baseSequence[j].first));
+		}
+	}
+
+	return maintheme;
+}
+
+vector<pair<Chord, double> > Generator2::generateChords(const Chord& tonicChord) const{
+	/* 	Each element of vector<pair<Chord, double>>
+		is a pair of a Chord and its appearance time
+	*/
+	vector<pair<Chord, double> > chords;
+	int tonicFrequency = tonicChord.getNote().getFrequency();
+	srand(time(NULL));
+	int count = 1 << (rand() % 2 + 1);  // FixMe: too complicated	//ur mom is too complicated
+	double chordLength = basicChordLength;
+	vector<Chord> combo;
+	combo.push_back(Chord(getNoteFrequencyByIndex(tonicChord, 1), MINOR));
+	combo.push_back(Chord(getNoteFrequencyByIndex(tonicChord, -1), MAJOR));
+	combo.push_back(Chord(getNoteFrequencyByIndex(tonicChord, 3), MAJOR));
+	combo.push_back(Chord(getNoteFrequencyByIndex(tonicChord, 7), MAJOR));
+	for (int i = 0; i < count; i++){
+		for (int j = 0; j < combo.size(); j++){
+			chords.push_back(make_pair(combo[j], (combo.size() * i + j) * chordLength));
+		}
+	}
+	return chords;
+}
+
+vector<pair<Note, double> > Generator2::generateAccompaniment(AllChords) const{
+	vector<pair<Note, double> > accompaniment;
+	
+	for (int i = 0; i < chords.size(); i++){
+		for (int j = 1; j <= 5; j += 2){
+			accompaniment.push_back(make_pair(Note(getNoteFrequencyByIndex(chords[i].first, j), basicChordLength), chords[i].second));
+		}
+	}
+
+	for (int i = 0; i < accompaniment.size(); i++){
+		accompaniment[i].first.setVolume(accompaniment[i].first.getVolume() / 3);
+	}
+
+	return accompaniment;
+}
+
+vector<pair<Note, double> > Generator2::generateMaintheme(AllChords) const{
+	vector<pair<Note, double> > maintheme;
+
+	vector<pair<double, int> > baseSequence;
+	int count = 1 << 2;
+	baseSequence.push_back(make_pair(0, 1));
+	for (int i = 1; i < count; i++){
+		baseSequence.push_back(make_pair(basicChordLength / count * i, 1 + 2 * (rand() % 3)));
+	}
+	int countInside = 4;
+	for (int i = 0; i < count; i++){
+		for (int j = 1; j < countInside; j++){
+			baseSequence.push_back(make_pair(basicChordLength / count * (i + 1.0 * j / countInside),
+				(baseSequence[i].second * (countInside - j) +
+				baseSequence[(i + 1) % count].second * j) / countInside));
+		}
+	}
+	sort(baseSequence.begin(), baseSequence.end());
+	
+	for (auto x : baseSequence)
+		cerr << x.first << " " << x.second << "\n";
+
+	for (int i = 0; i < chords.size(); i++){
+		for (int j = 0; j < baseSequence.size(); j++){
+			maintheme.push_back(make_pair(Note(getNoteFrequencyByIndex(chords[i].first, baseSequence[j].second),
+				basicChordLength / count / countInside),
+				basicChordLength * i + baseSequence[j].first));
 		}
 	}
 

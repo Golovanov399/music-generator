@@ -43,4 +43,13 @@ public:
 	vector<pair<Note, double> > generateMaintheme(AllChords) const;
 };
 
+class Generator2 : public Generator{
+public:
+	Generator2(){}
+	~Generator2(){}
+	vector<pair<Chord, double> > generateChords(const Chord& tonicChord) const;
+	vector<pair<Note, double> > generateAccompaniment(AllChords) const;
+	vector<pair<Note, double> > generateMaintheme(AllChords) const;
+};
+
 #endif

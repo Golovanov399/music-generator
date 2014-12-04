@@ -11,7 +11,7 @@
 
 int main()
 {
-	Generator1 gen;
+	Generator2 gen;
 	std::vector<std::pair<Note, double> > Melody = gen.generateMelody();
 
 	std::ofstream OutputFile1("NoteSequence.txt", std::ofstream::out);
@@ -20,8 +20,8 @@ int main()
 	Track melodyTrack(Melody, Instrument(Instrument::squareHarmonics(10)));
 	Tremolo effect(0.0, 0.0, 0.2, 30);
 	Echo effect2(0.0, 0.6, 0.4);
-	effect.applyEffect(melodyTrack);
-	effect2.applyEffect(melodyTrack);
+	// effect.applyEffect(melodyTrack);
+	// effect2.applyEffect(melodyTrack);
 	melodyTrack.normalize();
 
 	std::ofstream OutputFile2("Track.txt", std::ofstream::out);
