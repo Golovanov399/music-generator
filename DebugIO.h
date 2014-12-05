@@ -17,3 +17,4 @@ void printTrack(std::ofstream* outputFile, const Track& track);
 std::vector<std::pair<Note, double> > scanNoteSequence(std::istream* inputFile);
 Instrument scanInstrument(std::istream* inputFile);
 Piano scanPiano(std::istream* inputFile);
+windInstrument scanWindInstrument(std::istream* inputFile);
