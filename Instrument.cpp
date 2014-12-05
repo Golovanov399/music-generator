@@ -8,10 +8,10 @@
 Instrument::Instrument() :
 	modulationIndex0_(0),
 	modulationRatio_(0),
-	attackTime_(MIN_ATTACK),
+	attackTime_(Instrument::minAttack()),
 	decayTime_(0),
 	sustainLevel_(1.0),
-	releaseTime_(MIN_RELEASE)
+	releaseTime_(Instrument::minRelease())
 {
 	harmonics_[1.0] = 1.0;
 }
@@ -20,10 +20,10 @@ Instrument::Instrument(const std::map<double, double>& harmonics) :
 	harmonics_(harmonics),
 	modulationIndex0_(0),
 	modulationRatio_(0),
-	attackTime_(MIN_ATTACK),
+	attackTime_(Instrument::minAttack()),
 	decayTime_(0),
 	sustainLevel_(1.0),
-	releaseTime_(MIN_RELEASE)
+	releaseTime_(Instrument::minRelease())
 { }
 
 
@@ -63,6 +63,26 @@ Instrument::Instrument( const std::map<double, double>& harmonics,
 	sustainLevel_(sustainLevel),
 	releaseTime_(releaseTime)
 { }
+
+const double Instrument::minAttack()
+{
+	return 0.001;
+}
+
+const double Instrument::minRelease()
+{
+	return 0.001;
+}
+
+const double Instrument::minReleaseLevel()
+{
+	return 0.01;
+}
+
+const double Instrument::minModulationIndex()
+{
+	return 0.01;
+}
 
 std::map<double, double> Instrument::getHarmonics() const
 {
@@ -172,7 +192,7 @@ double Instrument::ADSR(double frequency, double time, double duration) const //
 
 double Instrument::getModuloIndexValue(double time, double duration) const
 {
-	return modulationIndex0_ * pow(MIN_MODULO_INDEX, time / getRealDuration(duration));
+	return modulationIndex0_ * pow(Instrument::minModulationIndex(), time / getRealDuration(duration));
 }
 
 double Instrument::getWaveValue(double frequency,
@@ -192,12 +212,12 @@ double Instrument::getWaveValue(double frequency,
 	return ADSR(frequency, timeInSeconds, duration) * volume * waveValue;
 }
 
-Piano::Piano(double attackTime, double releaseTime)
-     : Instrument(Piano::pianoHarmonics(), attackTime, 0, 0, releaseTime)
+Piano::Piano(double attackTime)
+     : Instrument(Piano::pianoHarmonics(), attackTime, 0, 0, Piano::pianoRelease())
 { }
 
-Piano::Piano(const std::map<double, double>& harmonics, double attackTime, double releaseTime)
-     : Instrument(harmonics, attackTime, 0, 0, releaseTime)
+Piano::Piano(const std::map<double, double>& harmonics, double attackTime)
+     : Instrument(harmonics, attackTime, 0, 0, Piano::pianoRelease())
 { }
 
 double Piano::getAttackVolume(double time) const
@@ -207,7 +227,7 @@ double Piano::getAttackVolume(double time) const
 
 double Piano::getReleaseVolume(double lastLevel, double time) const
 {
-	return lastLevel * pow(MIN_RELEASE_LEVEL, (time / releaseTime_ ));
+	return lastLevel * pow(Instrument::minReleaseLevel(), (time / releaseTime_ ));
 }
 
 const std::map<double, double> Piano::pianoHarmonics()
@@ -222,6 +242,11 @@ const std::map<double, double> Piano::pianoHarmonics()
 	std::map<double, double> harmonics = {{1.0, 1.0}, {0.5, 1.0/3.0}, {1.5, 0.25}, {2.0, 0.5}, {4.0, 0.25}, {6.0, 0.25},
 					       {8.0, 0.125}, {10.0, 0.125}};
 	return harmonics;
+}
+
+const double Piano::pianoRelease()
+{
+	return 0.5;
 }
 
 windInstrument::windInstrument(const std::map<double, double>& harmonics, double attackTime, double decayTime, double sustainLevel, double releaseTime)
@@ -259,10 +284,10 @@ double windInstrument::getDecayVolume(double time) const
 }
 
 Bell::Bell(double releaseTime, double modulationIndex, double modulationRatio)
-     : Instrument(Instrument::triangleHarmonics(11), modulationIndex, modulationRatio, MIN_ATTACK, 0, 0, releaseTime)
+     : Instrument(Instrument::triangleHarmonics(11), modulationIndex, modulationRatio, Instrument::minAttack(), 0, 0, releaseTime)
 { }
 
 double Bell::getReleaseVolume(double lastLevel, double time) const
 {
-	return lastLevel * pow(MIN_RELEASE_LEVEL, (time / releaseTime_));
+	return lastLevel * pow(Instrument::minReleaseLevel(), (time / releaseTime_));
 }
