@@ -4,11 +4,6 @@
 #include <map>
 #include <vector>
 
-const double MIN_ATTACK = 0.001;
-const double MIN_RELEASE = 0.001;
-const double MIN_RELEASE_LEVEL = 0.01;
-const double MIN_MODULO_INDEX = 0.01;
-
 class Instrument
 {
 protected:
@@ -26,9 +21,10 @@ public:
 	Instrument(const std::map<double, double>& harmonics, double attackTime, double decayTime, double sustainLevel, double releaseTime);
 	Instrument(const std::map<double, double>& harmonics, double modulationIndex, double modulationRatio, double attackTime, double decayTime, double sustainLevel, double releaseTime);
 
-	static const std::map<double, double> sawHarmonics(int numberOfHarmonics);
-	static const std::map<double, double> squareHarmonics(int numberOfHarmonics);
-	static const std::map<double, double> triangleHarmonics(int numberOfHarmonics);
+	static const double minAttack();
+	static const double minRelease();
+	static const double minReleaseLevel();
+	static const double minModulationIndex();
 
 	std::map<double, double> getHarmonics() const;
 	double getModulationIndex0() const;
@@ -37,6 +33,11 @@ public:
 	double getDecayTime() const;
 	double getSustainLevel() const;
 	double getReleaseTime() const;
+
+	static const std::map<double, double> sawHarmonics(int numberOfHarmonics);
+	static const std::map<double, double> squareHarmonics(int numberOfHarmonics);
+	static const std::map<double, double> triangleHarmonics(int numberOfHarmonics);
+
 
 	double getRealDuration(double duration) const;
 	virtual double getAttackVolume(double time) const;
@@ -52,10 +53,11 @@ public:
 class Piano: public Instrument
 {
 public:
-	Piano(double attackTime, double releaseTime);
-	Piano(const std::map<double, double>& harmonics, double attackTime, double releaseTime);
+	Piano(double attackTime);
+	Piano(const std::map<double, double>& harmonics, double attackTime);
 
 	static const std::map<double, double> pianoHarmonics();
+	static const double pianoRelease();
 
 	double getAttackVolume(double time) const override;
 	double getReleaseVolume(double lastLevel, double time) const override;
