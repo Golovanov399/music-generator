@@ -18,10 +18,10 @@ int main()
 	printNoteSequence(&OutputFile1, Melody);
 
 	Track melodyTrack(Melody, Instrument(Instrument::squareHarmonics(10)));
-	Tremolo effect(0.0, 0.0, 0.2, 30);
-	Echo effect2(0.0, 0.6, 0.4);
-	// effect.applyEffect(melodyTrack);
-	// effect2.applyEffect(melodyTrack);
+	Tremolo effect(0.0, 0.0, 0.2, 3);
+	Echo effect2(0.0, 0.0, 0.6, 0.4);
+	//effect.applyEffect(melodyTrack);
+	effect2.applyEffect(melodyTrack);
 	melodyTrack.normalize();
 
 	std::ofstream OutputFile2("Track.txt", std::ofstream::out);

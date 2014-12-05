@@ -4,6 +4,9 @@
 #include "Utility.h"
 #include "Effects.h"
 #include "CValues.h"
+
+#define min(a, b) ((a < b ? a : b))
+
         
 Effect::Effect() : 	start_(0),
 			duration_(0),
@@ -65,20 +68,25 @@ double Effect::getPower() const
 
 Echo::Echo(	const double &start,
 		const double &duration,
-		const double &power) :
-		Effect(start, duration, power)
+		const double &power,
+		const double &delay) :
+		Effect(start, duration, power),
+		delay_(delay)
 {
 }
 
 void Echo::applyEffect(Track &sample) const
 {
-	size_t 	buffer_size = (size_t)(duration_ * SAMPLE_RATE),
+	size_t 	buffer_size = (size_t)(delay_ * SAMPLE_RATE),
 		buffer_ptr = 0,
 		start = (size_t)(start_ * SAMPLE_RATE),
-		sample_size = sample.getLength();
+		finish = (duration_ <= 1e-6 ? sample.getLength() : 
+			min((size_t)((start_ + duration_) * SAMPLE_RATE),
+			sample.getLength()));
 	std::vector<double> buffer(buffer_size);
-	sample.resize(sample_size + buffer_size);
-	for (size_t i = start; i < sample.getLength(); i++)
+	if (finish + buffer_size > sample.getLength())
+		sample.resize(finish + buffer_size);
+	for (size_t i = start; i < finish + buffer_size; i++)
 	{
 		double tmp = sample.getValue(i);
 		sample.modifyValue(i, power_ * buffer[buffer_ptr]);

@@ -30,10 +30,12 @@ public :
 
 class Echo : public Effect
 {
+	double delay_;
 public :
 	Echo(	const double &start,
 		const double &duration,
-		const double &power);
+		const double &power,
+		const double &delay);
 	void applyEffect(Track &sample) const;
 };
 
