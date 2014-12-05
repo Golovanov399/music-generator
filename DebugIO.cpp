@@ -116,5 +116,5 @@ Piano scanPiano(std::istream* inputFile)
 		harmonics[harmonic] = harmonicIndex;
 	}	
 
-	return Piano(harmonics, 0.006, 0.5);
+	return Piano(harmonics, 0.006);
 }
