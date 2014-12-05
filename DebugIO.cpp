@@ -55,7 +55,7 @@ void printInstrument(std::ofstream* outputFile, const Instrument& instrument)
 	(*outputFile)<<instrument.getAttackTime()<<" "<<
 			instrument.getDecayTime()<<" "<<
 			instrument.getSustainLevel()<<" "<<
-			instrument.getTremoloFrequency()<<" "<<
+	//		instrument.getTremoloFrequency()<<" "<<
 			instrument.getReleaseTime()<<"\n";
 }
 
@@ -117,7 +117,7 @@ Piano scanPiano(std::istream* inputFile)
 		harmonics[harmonic] = harmonicIndex;
 	}	
 
-	return Piano(harmonics, 0.006, 0.5);
+	return Piano(harmonics, 0.006);
 }
 
 windInstrument scanWindInstrument(std::istream* inputFile)
@@ -134,7 +134,7 @@ windInstrument scanWindInstrument(std::istream* inputFile)
 	}	
 
 	double A, D, S, TF, R;
-	(*inputFile)>>A>>D>>S>>TF>>R;
+	(*inputFile)>>A>>D>>TF>>S>>R;
 
-	return windInstrument(harmonics, A, D, S, TF, R);
+	return windInstrument(harmonics, A, D, S, R);
 }
