@@ -79,3 +79,67 @@ void testWindInstrument()
 	//std::ofstream outputFile3(testName + " sample.wav", std::ofstream::binary);
 	melodyTrack.drop(&(testName + " sample.wav")[0]);
 }
+
+void testEcho()
+{
+        double start;
+        double duration;
+	double power;
+	double delay;
+	
+        //std::string testName;
+	//std::cin>>testName;
+        
+        cin >> start;
+        cin >> duration;
+        cin >> power;
+        cin >> delay;
+        
+        Generator2 gen;
+        std::vector<std::pair<Note, double> > Melody = gen.generateMelody();
+        Track melodyTrack(Melody, Instrument(Instrument::squareHarmonics(10)));
+	//std::vector<std::pair<Note, double> > Melody(1, std::pair<Note, double>(Note(9, 0.003, 25), 0));      
+	
+	Echo effect(start, duration, power, delay);
+	effect.applyEffect(melodyTrack);
+	
+	melodyTrack.normalize();
+	
+	//std::ofstream OutputFile(testName + ".txt", std::ofstream::out);
+	//OutputFile << start << " " << duration << " " << power << endl;
+	
+	melodyTrack.drop("test_echo.wav");
+}
+
+void testTremolo()
+{
+        double start;
+        double duration;
+	double power;
+	double frequency;
+	
+        //std::string testName;
+	//std::cin>>testName;
+        
+       // cin >> start;
+       // cin >> duration;
+        cin >> power;
+        cin >> frequency;
+        
+        Generator2 gen;
+        std::vector<std::pair<Note, double> > Melody = gen.generateMelody();
+        Track melodyTrack(Melody, Instrument(Instrument::squareHarmonics(10)));
+	//std::vector<std::pair<Note, double> > Melody(1, std::pair<Note, double>(Note(9, 0.003, 25), 0));      
+	
+	Tremolo effect(0, 0, power, frequency);
+	effect.applyEffect(melodyTrack);
+	
+	melodyTrack.normalize();
+	
+	//std::ofstream OutputFile(testName + ".txt", std::ofstream::out);
+	//OutputFile << start << " " << duration << " " << power << endl;
+	
+	melodyTrack.drop("test_tremolo.wav");
+}
+
+
