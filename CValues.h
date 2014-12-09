@@ -6,11 +6,15 @@
 const double PI = 3.14159265358979;
 const double TWO_PI = 6.2831853071796;
 
+// generator constants
+const int MIN_SECONDS_IN_BAR = 2.0;
+const int MAX_SECONDS_IN_BAR = 4.0;
+
 // track constants
 const int SAMPLE_RATE = 44100;
-const double SECONDS_IN_BAR = 2.0;
 
 // instrument comstants
+const double MAX_FREQUENCY = 10000.0;
 const int NUMBER_OF_INSTRUMENTS = 4;
 
 //maximum and minimum constants of effects
