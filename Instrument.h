@@ -2,12 +2,22 @@
 
 #include <cstdlib>
 #include <map>
+#include <memory>
 #include <vector>
+
+struct Harmonics
+{
+	Harmonics();
+	Harmonics(const std::map<double, double>& harmonics, double normalizeindex);
+
+	std::map<double, double> harmonics;
+	double normalizeIndex;
+};
 
 class Instrument
 {
 protected:
-	std::map<double, double> harmonics_;
+	Harmonics harmonics_;
 	double modulationIndex0_;
 	double modulationRatio_;	
 	double attackTime_;
@@ -16,11 +26,12 @@ protected:
 	double releaseTime_;
 public:
 	Instrument();
-	Instrument(const std::map<double, double>& harmonics);
+	Instrument(const Harmonics& harmonics);
 	Instrument(double attackTime, double decayTime, double sustainLevel, double releaseTime);
-	Instrument(const std::map<double, double>& harmonics, double attackTime, double decayTime, double sustainLevel, double releaseTime);
-	Instrument(const std::map<double, double>& harmonics, double modulationIndex, double modulationRatio, double attackTime, double decayTime, double sustainLevel, double releaseTime);
+	Instrument(const Harmonics& harmonics, double attackTime, double decayTime, double sustainLevel, double releaseTime);
+	Instrument(const Harmonics& harmonics, double modulationIndex, double modulationRatio, double attackTime, double decayTime, double sustainLevel, double releaseTime);
 
+	static const int maxHarmonicNumber();
 	static const double minAttack();
 	static const double minRelease();
 	static const double minReleaseLevel();
@@ -34,10 +45,11 @@ public:
 	double getSustainLevel() const;
 	double getReleaseTime() const;
 
-	static const std::map<double, double> sawHarmonics(int numberOfHarmonics);
-	static const std::map<double, double> squareHarmonics(int numberOfHarmonics);
-	static const std::map<double, double> triangleHarmonics(int numberOfHarmonics);
-
+	static const int numberOfWaves();
+	static const Harmonics sawHarmonics(int numberOfHarmonics);
+	static const Harmonics squareHarmonics(int numberOfHarmonics);
+	static const Harmonics triangleHarmonics(int numberOfHarmonics);
+	static const Instrument randomWave();
 
 	double getRealDuration(double duration) const;
 	virtual double getAttackVolume(double time) const;
@@ -53,10 +65,11 @@ public:
 class Piano: public Instrument
 {
 public:
-	Piano(double attackTime);
-	Piano(const std::map<double, double>& harmonics, double attackTime);
+	Piano();
+	Piano(const Harmonics& harmonics);
 
-	static const std::map<double, double> pianoHarmonics();
+	static const Harmonics pianoHarmonics();
+	static const double pianoAttack();
 	static const double pianoRelease();
 
 	double getAttackVolume(double time) const override;
@@ -66,14 +79,18 @@ public:
 class windInstrument : public Instrument
 {
 public:
-	windInstrument(const std::map<double, double>& harmonics, double attackTime, double decayTime, double sustainLevel, double releaseTime);
+	windInstrument(const Harmonics& harmonics, double attackTime, double decayTime, double sustainLevel, double releaseTime);
 
-	static const std::map<double, double> fluteHarmonics();
-	static const std::map<double, double> clarinetHarmonics();
-	static const std::map<double, double> trumpetHarmonics();
+	static const int numberOfFlutes();
+	static const windInstrument Flute(int mode);
+	static const windInstrument randomFlute();
+	
+	static const int numberOfOrgans();
+	static const windInstrument Organ(int mode);
+	static const windInstrument randomOrgan();
 
 	double getAttackVolume(double time) const override;
-	double getDecayVolume(double time) const override;
+	double getReleaseVolume(double lastLevel, double time) const override;
 };
 
 class Bell: public Instrument
@@ -83,3 +100,5 @@ public:
 
 	double getReleaseVolume(double lastLevel, double time) const override;
 };
+
+std::unique_ptr<Instrument> randomInstrument();
