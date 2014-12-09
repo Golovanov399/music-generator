@@ -7,12 +7,12 @@
 #include "Note.h"
 #include "Track.h"
 
-void printNote(std::ofstream* outputFile, const Note& note)
+void printNote(std::ostream* outputFile, const Note& note)
 {
 	(*outputFile)<<note.getFrequency()<<" "<<note.getDuration()<<" "<<note.getVolume();
 }
 
-void printMode(std::ofstream* outputFile, const Mode& mode)
+void printMode(std::ostream* outputFile, const Mode& mode)
 {
 	if (mode == MAJOR)
 		(*outputFile)<<"MAJOR";
@@ -20,14 +20,14 @@ void printMode(std::ofstream* outputFile, const Mode& mode)
 		(*outputFile)<<"MINOR";
 }
 
-void printChord(std::ofstream* outputFile, const Chord& chord)
+void printChord(std::ostream* outputFile, const Chord& chord)
 {
 	printNote(outputFile, chord.getNote());
 	(*outputFile)<<" ";
 	printMode(outputFile, chord.getMode());
 }
 
-void printNoteSequence(std::ofstream* outputFile, const std::vector<std::pair<Note, double> >& NoteSequence)
+void printNoteSequence(std::ostream* outputFile, const std::vector<std::pair<Note, double> >& NoteSequence)
 {
 	int SequenceLength = NoteSequence.size();
 	for (int i = 0; i < SequenceLength; ++i) {
@@ -36,7 +36,7 @@ void printNoteSequence(std::ofstream* outputFile, const std::vector<std::pair<No
 	}
 }
 
-void printChordSequence(std::ofstream* outputFile, const std::vector<std::pair<Chord, double> >& ChordSequence)
+void printChordSequence(std::ostream* outputFile, const std::vector<std::pair<Chord, double> >& ChordSequence)
 {
 	int sequenceLength = ChordSequence.size();
 	for (int i = 0; i < sequenceLength; ++i) {
@@ -45,20 +45,19 @@ void printChordSequence(std::ofstream* outputFile, const std::vector<std::pair<C
 	}
 }
 
-void printInstrument(std::ofstream* outputFile, const Instrument& instrument)
+void printInstrument(std::ostream* outputFile, const Instrument& instrument)
 {
 	std::map<double, double> harmonics = instrument.getHarmonics();
 	(*outputFile)<<harmonics.size()<<"\n";
 	for (auto harmonic : harmonics)
 		(*outputFile)<<harmonic.first<<" "<<harmonic.second<<"\n";
-	(*outputFile)<<instrument.getModulationIndex0()<<" "<<instrument.getModulationRatio()<<"\n";
 	(*outputFile)<<instrument.getAttackTime()<<" "<<
 			instrument.getDecayTime()<<" "<<
 			instrument.getSustainLevel()<<" "<<
 			instrument.getReleaseTime()<<"\n";
 }
 
-void printTrack(std::ofstream* outputFile, const Track& track)
+void printTrack(std::ostream* outputFile, const Track& track)
 {
 	int trackLength = track.getLength();
 	for (int i = 0; i < trackLength; ++i) {
