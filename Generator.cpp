@@ -271,26 +271,10 @@ vector<pair<Note, double> > Generator2::generateMaintheme(AllChords) const{
 	return maintheme;
 }
 
-vector<pair<Note, double> > Generator::generateMelody() const{
+Melody Generator::generateMelody() const{
 	Chord tonicChord(getNoteFrequency("A"), MINOR);
 	vector<pair<Chord, double> > chords = generateChords(tonicChord);
 	vector<pair<Note, double> > accompaniment = generateAccompaniment(allChords);
 	vector<pair<Note, double> > maintheme = generateMaintheme(allChords);
-	vector<pair<Note, double> > melody;
-	int leftIndex = 0, rightIndex = 0;
-	while (leftIndex < accompaniment.size() || rightIndex < maintheme.size()){
-		if (leftIndex == accompaniment.size()){
-			melody.push_back(maintheme[rightIndex++]);
-		} else
-		if (rightIndex == maintheme.size()){
-			melody.push_back(accompaniment[leftIndex++]);
-		} else
-		if (maintheme[rightIndex].second < accompaniment[leftIndex].second){
-			melody.push_back(maintheme[rightIndex++]);
-		} else {
-			melody.push_back(accompaniment[leftIndex++]);
-		}
-	}
-	return melody;
+	return Melody(accompaniment, maintheme, 2.0);
 }
-
