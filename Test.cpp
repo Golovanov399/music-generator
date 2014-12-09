@@ -27,9 +27,9 @@ void testInstrument()
 
 	Instrument instrument = scanInstrument(&std::cin);
 
-	std::vector<std::pair<Note, double> > Melody(1, std::pair<Note, double>(Note(9, 1.0, 25), 0));
+	Melody melody(noteSequence(1, std::pair<Note, double>(Note(9, 1.0, 25), 0)), noteSequence(), 1.0);
 
-	Track melodyTrack(Melody, instrument);
+	Track melodyTrack(melody, instrument, instrument);
 	melodyTrack.normalize();
 	
 	std::ofstream outputFile1(testName + ".txt", std::ofstream::out);
@@ -46,9 +46,9 @@ void testPiano()
 
 	Piano piano = scanPiano(&std::cin);
 
-	std::vector<std::pair<Note, double> > Melody(1, std::pair<Note, double>(Note(9, 0.5, 25), 0));
+	Melody melody(noteSequence(1, std::pair<Note, double>(Note(9, 1.0, 25), 0)), noteSequence(), 1.0);
 
-	Track melodyTrack(Melody, piano);
+	Track melodyTrack(melody, piano, piano);
 	melodyTrack.normalize();
 	
 	std::ofstream outputFile1(testName + ".txt", std::ofstream::out);
@@ -65,9 +65,9 @@ void testWindInstrument()
 
 	windInstrument instrument = scanWindInstrument(&std::cin);
 
-	std::vector<std::pair<Note, double> > Melody(1, std::pair<Note, double>(Note(9, 0.5, 25), 0));
+	Melody melody(noteSequence(1, std::pair<Note, double>(Note(9, 1.0, 25), 0)), noteSequence(), 1.0);
 
-	Track melodyTrack(Melody, instrument);
+	Track melodyTrack(melody, instrument, instrument);
 	melodyTrack.normalize();
 	
 	std::ofstream outputFile1(testName + ".txt", std::ofstream::out);
