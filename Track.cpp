@@ -20,9 +20,9 @@ Track::Track(const std::vector<double>& wave)
 		wave_[i] = wave[i];
 }
 
-Track::Track(const Note& element, const Instrument& instrument, double phase)
+Track::Track(const Note& element, const Instrument& instrument,  double secondsInBar, double phase)
 {
-	double duration = element.getDuration() * SECONDS_IN_BAR;
+	double duration = element.getDuration() * secondsInBar;
 	int waveSize = instrument.getRealDuration(duration) * (double) SAMPLE_RATE;
 	double frequency = (TWO_PI * element.getRealFrequency()) / (double) SAMPLE_RATE;
 	double volume = element.getVolume();
@@ -31,20 +31,27 @@ Track::Track(const Note& element, const Instrument& instrument, double phase)
 		wave_.push_back(instrument.getWaveValue(frequency, phase, volume, time, duration));
 }
 
-Track::Track(const std::vector<std::pair<Note, double> >& sequence, const Instrument& instrument) // naive constructor;
+Track::Track(const noteSequence& sequence, const Instrument& instrument, double secondsInBar) // naive constructor;
 {
 	wave_.clear();
-	for (int i = 0; i < (int)sequence.size(); i++)
+	for (int i = 0; i < (int) sequence.size(); i++)
 	{
-		int offset = (int) (sequence[i].second * SECONDS_IN_BAR * SAMPLE_RATE);
-		double phase = TWO_PI * sequence[i].first.getRealFrequency() * (sequence[i].second * SECONDS_IN_BAR);
-		addToSelf((int) wave_.size() - offset, Track(sequence[i].first, instrument, phase));
+		int offset = (int) (sequence[i].second * secondsInBar * SAMPLE_RATE);
+		double phase = TWO_PI * sequence[i].first.getRealFrequency() * (sequence[i].second * secondsInBar);
+		addToSelf((int) wave_.size() - offset, Track(sequence[i].first, instrument, secondsInBar, phase));
 	}
+}
+
+Track::Track(const Melody& melody, const Instrument& accompanimentInstrument, const Instrument& mainInstrument)
+{
+	wave_.clear();
+	addToSelf(0, Track(melody.getAccompaniment(), accompanimentInstrument, melody.getSecondsInBar()));
+	addToSelf((int) wave_.size(), Track(melody.getMainTheme(), mainInstrument, melody.getSecondsInBar()));
 }
 
 int Track::getLength() const
 {
-	return wave_.size();
+	return (int) wave_.size();
 }
 
 double Track::getValue(const size_t &index) const
