@@ -7,19 +7,17 @@
 
 struct Harmonics
 {
-	Harmonics();
-	Harmonics(const std::map<double, double>& harmonics, double normalizeindex);
-
 	std::map<double, double> harmonics;
 	double normalizeIndex;
+
+	Harmonics();
+	Harmonics(const std::map<double, double>& harmonics, double normalizeindex);
 };
 
 class Instrument
 {
 protected:
-	Harmonics harmonics_;
-	double modulationIndex0_;
-	double modulationRatio_;	
+	Harmonics harmonics_;	
 	double attackTime_;
 	double decayTime_;
 	double sustainLevel_;
@@ -29,7 +27,6 @@ public:
 	Instrument(const Harmonics& harmonics);
 	Instrument(double attackTime, double decayTime, double sustainLevel, double releaseTime);
 	Instrument(const Harmonics& harmonics, double attackTime, double decayTime, double sustainLevel, double releaseTime);
-	Instrument(const Harmonics& harmonics, double modulationIndex, double modulationRatio, double attackTime, double decayTime, double sustainLevel, double releaseTime);
 
 	static const int maxHarmonicNumber();
 	static const double minAttack();
@@ -37,9 +34,7 @@ public:
 	static const double minReleaseLevel();
 	static const double minModulationIndex();
 
-	std::map<double, double> getHarmonics() const;
-	double getModulationIndex0() const;
-	double getModulationRatio() const;	
+	std::map<double, double> getHarmonics() const;	
 	double getAttackTime() const;
 	double getDecayTime() const;
 	double getSustainLevel() const;
@@ -90,14 +85,6 @@ public:
 	static const windInstrument randomOrgan();
 
 	double getAttackVolume(double time) const override;
-	double getReleaseVolume(double lastLevel, double time) const override;
-};
-
-class Bell: public Instrument
-{
-public:
-	Bell(double releaseTime, double modulationIndex, double modulationRatio);
-
 	double getReleaseVolume(double lastLevel, double time) const override;
 };
 
