@@ -5,6 +5,7 @@
 #include <map>
 #include <algorithm>
 #include <iostream>
+#include "CValues.h"
 #include "Generator.h"
 #include "Note.h"
 
@@ -275,6 +276,6 @@ Melody Generator::generateMelody() const{
 	Chord tonicChord(getNoteFrequency("A"), MINOR);
 	vector<pair<Chord, double> > chords = generateChords(tonicChord);
 	vector<pair<Note, double> > accompaniment = generateAccompaniment(allChords);
-	vector<pair<Note, double> > maintheme = generateMaintheme(allChords);
-	return Melody(accompaniment, maintheme, 2.0);
+	vector<pair<Note, double> > maintheme = generateMaintheme(allChords);	
+	return Melody(accompaniment, maintheme, MIN_SECONDS_IN_BAR + rand() * (MAX_SECONDS_IN_BAR - MIN_SECONDS_IN_BAR) / RAND_MAX);
 }
