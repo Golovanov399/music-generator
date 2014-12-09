@@ -16,8 +16,6 @@ Harmonics::Harmonics(const std::map<double, double>& someHarmonics, double index
 { }
 
 Instrument::Instrument() :
-	modulationIndex0_(0),
-	modulationRatio_(0),
 	attackTime_(Instrument::minAttack()),
 	decayTime_(0),
 	sustainLevel_(1.0),
@@ -28,8 +26,6 @@ Instrument::Instrument() :
 
 Instrument::Instrument(const Harmonics& harmonics) :
 	harmonics_(harmonics),
-	modulationIndex0_(0),
-	modulationRatio_(0),
 	attackTime_(Instrument::minAttack()),
 	decayTime_(0),
 	sustainLevel_(1.0),
@@ -38,8 +34,6 @@ Instrument::Instrument(const Harmonics& harmonics) :
 
 
 Instrument::Instrument(double attackTime, double decayTime, double sustainLevel, double releaseTime) :
-	modulationIndex0_(0),
-	modulationRatio_(0),
 	attackTime_(attackTime),
 	decayTime_(decayTime),
 	sustainLevel_(sustainLevel),
@@ -50,24 +44,6 @@ Instrument::Instrument(double attackTime, double decayTime, double sustainLevel,
 
 Instrument::Instrument(const Harmonics& harmonics, double attackTime, double decayTime, double sustainLevel, double releaseTime) :
 	harmonics_(harmonics),
-	modulationIndex0_(0),
-	modulationRatio_(0),
-	attackTime_(attackTime),
-	decayTime_(decayTime),
-	sustainLevel_(sustainLevel),
-	releaseTime_(releaseTime)
-{ }
-
-Instrument::Instrument( const Harmonics& harmonics,
-			double modulationIndex,
-			double modulationRatio,
-			double attackTime,
-			double decayTime,
-			double sustainLevel,
-			double releaseTime) :
-	harmonics_(harmonics),
-	modulationIndex0_(modulationIndex),
-	modulationRatio_(modulationRatio),
 	attackTime_(attackTime),
 	decayTime_(decayTime),
 	sustainLevel_(sustainLevel),
@@ -81,12 +57,12 @@ const int Instrument::maxHarmonicNumber()
 
 const double Instrument::minAttack()
 {
-	return 0.001;
+	return 0.005;
 }
 
 const double Instrument::minRelease()
 {
-	return 0.001;
+	return 0.005;
 }
 
 const double Instrument::minReleaseLevel()
@@ -102,16 +78,6 @@ const double Instrument::minModulationIndex()
 std::map<double, double> Instrument::getHarmonics() const
 {
 	return harmonics_.harmonics;
-}
-
-double Instrument::getModulationIndex0() const
-{
-	return modulationIndex0_;
-}
-
-double Instrument::getModulationRatio() const	
-{
-	return modulationRatio_;
 }
 
 double Instrument::getAttackTime() const
@@ -171,7 +137,6 @@ const Harmonics Instrument::triangleHarmonics(int numberOfHarmonics)
 
 const Instrument Instrument::randomWave()
 {
-	srand(time(NULL));
 	int mode = rand() % Instrument::numberOfWaves();	
 
 	std::map<int, Harmonics> waveHarmonics;	
@@ -223,11 +188,6 @@ double Instrument::ADSR(double frequency, double time, double duration) const //
 	return sustainLevel_;
 }
 
-double Instrument::getModuloIndexValue(double time, double duration) const
-{
-	return modulationIndex0_ * pow(Instrument::minModulationIndex(), time / getRealDuration(duration));
-}
-
 double Instrument::getWaveValue(double frequency, // frequency contains 2pi/SAMPLE_RATE
 				double phase,
 				double volume,
@@ -238,10 +198,9 @@ double Instrument::getWaveValue(double frequency, // frequency contains 2pi/SAMP
 	double waveValue = 0;
 	for (auto harmonic : harmonics_.harmonics)
 	{
-		//if (harmonic.first * frequency * SAMPLE_RATE / TWO_PI <= 4000.0)
+		if (harmonic.first * frequency * SAMPLE_RATE / TWO_PI <= MAX_FREQUENCY)
 		waveValue += (harmonic.second * sin(
 		     	      harmonic.first * frequency * time +
-		     	      getModuloIndexValue(timeInSeconds, duration) * sin(modulationRatio_ * frequency * time) +
 		     	      phase));
 	}
 	waveValue /= harmonics_.normalizeIndex;
@@ -282,7 +241,7 @@ const double Piano::pianoAttack()
 
 const double Piano::pianoRelease()
 {
-	return 0.5;
+	return 1.0;
 }
 
 windInstrument::windInstrument(const Harmonics& harmonics, double attackTime, double decayTime, double sustainLevel, double releaseTime)
@@ -300,7 +259,7 @@ const windInstrument windInstrument::Flute(int mode)
 	
 	std::map<int, Harmonics> fluteHarmonics;	
 	fluteHarmonics[0] = Instrument::triangleHarmonics(Instrument::maxHarmonicNumber());
-	fluteHarmonics[1] = Harmonics({{1.0, 1.0}, {3.0, -0.25}}, 1.25);
+	fluteHarmonics[1] = Harmonics({{1.0, 1.0}, {3.0, 0.25}}, 0.891056);
 	fluteHarmonics[2] = Harmonics({{1.0, 1.0}, {2.0, 0.28}, {3.0, 4.25}, {4.0, 2.0/15.0}, {5.0, 0.3}, {6.0, 2.0/33.0}, {7.0, 0.185}, {8.0, 0.0035}}, 5.26469);
 
 	return windInstrument(fluteHarmonics[mode], 0.2, 0.01, 5.0/6.0, 0.2);
@@ -308,7 +267,6 @@ const windInstrument windInstrument::Flute(int mode)
 
 const windInstrument windInstrument::randomFlute()
 {
-	srand(time(NULL));
 	return Flute(rand() % windInstrument::numberOfFlutes());
 }
 
@@ -332,7 +290,6 @@ const windInstrument windInstrument::Organ(int mode)
 
 const windInstrument windInstrument::randomOrgan()
 {
-	srand(time(NULL));
 	return Organ(rand() % windInstrument::numberOfOrgans());
 }
 
@@ -348,7 +305,6 @@ double windInstrument::getReleaseVolume(double lastLevel, double time) const
 
 std::unique_ptr<Instrument> randomInstrument()
 {
-	srand(time(NULL));
 	int mode = rand() % NUMBER_OF_INSTRUMENTS;
 	std::unique_ptr<Instrument> instrument;
 	if (mode == 0)
@@ -360,13 +316,4 @@ std::unique_ptr<Instrument> randomInstrument()
 	if (mode == 3)
 		instrument = std::unique_ptr<Instrument>(new windInstrument(windInstrument::randomOrgan()));
 	return instrument;
-}
-
-Bell::Bell(double releaseTime, double modulationIndex, double modulationRatio)
-     : Instrument(Instrument::triangleHarmonics(11), modulationIndex, modulationRatio, Instrument::minAttack(), 0, 0, releaseTime)
-{ }
-
-double Bell::getReleaseVolume(double lastLevel, double time) const
-{
-	return lastLevel * pow(Instrument::minReleaseLevel(), (time / releaseTime_));
 }
