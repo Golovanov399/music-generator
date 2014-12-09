@@ -26,7 +26,7 @@ public:
 
 	Generator();
 	~Generator(){}
-	vector<pair<Note, double> > generateMelody() const;
+	Melody generateMelody() const;
 
   // FixMe: use typedefs
 	virtual vector<pair<Chord, double> > generateChords(const Chord& tonicChord) const = 0;
