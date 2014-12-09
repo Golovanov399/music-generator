@@ -12,11 +12,9 @@ class Track
 public:
 	Track();
 	Track(const std::vector<double> &wave);
-	Track(const Note& element,
-		const Instrument& instrument,
-		double phase);
-	Track(const std::vector<std::pair<Note, double>> &sequence, 
-		const Instrument &instrument); // naive constructor;
+	Track(const Note& element, const Instrument& instrument, double secondsInBar, double phase);
+	Track(const noteSequence& sequence, const Instrument& instrument, double secondsInBar); // naive constructor;
+	Track(const Melody& melody, const Instrument& accompanimentInstrument, const Instrument& mainInstrument);
 
 	int getLength() const;
 	double getValue(const size_t &index) const;
