@@ -1,4 +1,6 @@
 #include <cmath>	//for pow(x, y)
+#include <utility>
+#include <vector>
 #include "Note.h"
 
 Note::Note()
@@ -69,4 +71,25 @@ double Chord::getDuration() const
 double Chord::getVolume() const
 {
   return note_.getVolume();
+}
+
+Melody::Melody(const noteSequence& sequence1, const noteSequence& sequence2, double number) :
+	accompaniment_(sequence1),
+	mainTheme_(sequence2),
+	secondsInBar_(number)
+{ }
+
+noteSequence Melody::getAccompaniment() const
+{
+	return accompaniment_;
+}
+
+noteSequence Melody::getMainTheme() const
+{
+	return mainTheme_;
+}
+
+double Melody::getSecondsInBar() const
+{
+	return secondsInBar_;
 }
