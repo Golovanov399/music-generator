@@ -1,6 +1,7 @@
-#ifndef __Note__
+#pragma once
 
-#define __Note__
+#include <utility>
+#include <vector>
 
 const double REAL_FREQUENCY = 440.0;
 const double MAX_AMPLITUDE = 100.0;
@@ -22,7 +23,7 @@ public :
 	double getVolume() const;
 
 	void setVolume(double volume);
-} ;
+};
 
 class Chord {
 	Note note_;
@@ -35,6 +36,18 @@ public :
 	int getFrequency() const;
 	double getDuration() const;
 	double getVolume() const;
-} ;
+};
 
-#endif
+typedef std::vector<std::pair<Note, double> > noteSequence;
+
+class Melody {
+	noteSequence accompaniment_;
+	noteSequence mainTheme_;
+	double secondsInBar_;
+
+public:
+	Melody(const noteSequence& sequence1, const noteSequence& dequence2, double number);
+	noteSequence getAccompaniment() const;
+	noteSequence getMainTheme() const;
+	double getSecondsInBar() const;
+};
