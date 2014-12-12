@@ -19,6 +19,14 @@ int getCountOfTrailingZeroes(int x){
 		return -1;
 }
 
+template <typename T>
+T randElement(const vector<T>& data){
+	if (data.size() == 0)
+		return T();
+	else
+		return data[rand() % ((int)data.size())];
+}
+
 int generator::getNoteFrequency(const string& noteName, int octave = 0) {
 	int currentFrequency = 0;
   // FixMe: do not use switch for this purpose:
@@ -27,7 +35,6 @@ int generator::getNoteFrequency(const string& noteName, int octave = 0) {
 		case 'C':
 			currentFrequency = 0;
 			break;
-      // FixMe: no breaks!
 		case 'D':
 			currentFrequency = 2;
 			break;
@@ -221,51 +228,51 @@ vector<pair<Chord, double> > Generator2::generateChords(const Chord& tonicChord)
 	pair<Mode, int> currentChord(MINOR, 1);
 	auto nextChord = [&](){
 		if (currentChord.first == MINOR){
-			switch (currentChord.second){
+			switch ((currentChord.second + 7) % 7){
 				case 1:
-					currentChord = vector<pair<Mode, int>>{make_pair(MAJOR, 3), make_pair(MAJOR, 5), make_pair(MAJOR, 6)}[rand() % 3];
+					currentChord = randElement(vector<pair<Mode, int>>{make_pair(MAJOR, -1), make_pair(MAJOR, 3)});
 					break;
 				case 2:
-					currentChord = vector<pair<Mode, int>>{make_pair(MAJOR, 4)}[rand() % 1];
+					currentChord = randElement(vector<pair<Mode, int>>{});
 					break;
 				case 3:
-					currentChord = vector<pair<Mode, int>>{make_pair(MAJOR, 5)}[rand() % 1];
+					currentChord = randElement(vector<pair<Mode, int>>{});
 					break;
 				case 4:
-					currentChord = vector<pair<Mode, int>>{make_pair(MAJOR, 6), make_pair(MAJOR, 7), make_pair(MINOR, 1), make_pair(MAJOR, 3)}[rand() % 4];
+					currentChord = randElement(vector<pair<Mode, int>>{make_pair(MAJOR, 5)});
 					break;
 				case 5:
-					currentChord = vector<pair<Mode, int>>{make_pair(MAJOR, 7), make_pair(MINOR, 4), make_pair(MAJOR, 6)}[rand() % 3];
+					currentChord = randElement(vector<pair<Mode, int>>{make_pair(MINOR, 1)});
 					break;
 				case 6:
-					currentChord = vector<pair<Mode, int>>{make_pair(MAJOR, 2)}[rand() % 1];
+					currentChord = randElement(vector<pair<Mode, int>>{});
 					break;
 				default:
-					currentChord = vector<pair<Mode, int>>{make_pair(MAJOR, 2), make_pair(MAJOR, 6), make_pair(MINOR, 3)}[rand() % 3];
+					currentChord = randElement(vector<pair<Mode, int>>{});
 					break;
 			}
 		} else {
-			switch (currentChord.second){
+			switch ((currentChord.second + 7) % 7){
 				case 1:
-					currentChord = vector<pair<Mode, int>>{make_pair(MINOR, 6), make_pair(MAJOR, 5), make_pair(MINOR, 1)}[rand() % 3];
+					currentChord = randElement(vector<pair<Mode, int>>{});
 					break;
 				case 2:
-					currentChord = vector<pair<Mode, int>>{make_pair(MINOR, 1)}[rand() % 1];
+					currentChord = randElement(vector<pair<Mode, int>>{});
 					break;
 				case 3:
-					currentChord = vector<pair<Mode, int>>{make_pair(MINOR, 1), make_pair(MAJOR, 4), make_pair(MAJOR, 6), make_pair(MAJOR, 7)}[rand() % 4];
+					currentChord = randElement(vector<pair<Mode, int>>{make_pair(MAJOR, 6), make_pair(MAJOR, 5)});
 					break;
 				case 4:
-					currentChord = vector<pair<Mode, int>>{make_pair(MAJOR, 1)}[rand() % 1];
+					currentChord = randElement(vector<pair<Mode, int>>{});
 					break;
 				case 5:
-					currentChord = vector<pair<Mode, int>>{make_pair(MINOR, 1), make_pair(MAJOR, 6)}[rand() % 2];
+					currentChord = randElement(vector<pair<Mode, int>>{make_pair(MINOR, 1)});
 					break;
 				case 6:
-					currentChord = vector<pair<Mode, int>>{make_pair(MINOR, 4), make_pair(MAJOR, 5), make_pair(MAJOR, 7)}[rand() % 3];
+					currentChord = randElement(vector<pair<Mode, int>>{make_pair(MAJOR, 3), make_pair(MAJOR, 7)});
 					break;
 				default:
-					currentChord = vector<pair<Mode, int>>{make_pair(MAJOR, 6), make_pair(MINOR, 5), make_pair(MAJOR, 3)}[rand() % 3];
+					currentChord = randElement(vector<pair<Mode, int>>{make_pair(MAJOR, 3), make_pair(MAJOR, 6)});
 					break;
 			}
 		}
@@ -273,9 +280,9 @@ vector<pair<Chord, double> > Generator2::generateChords(const Chord& tonicChord)
 
 	int countOfChords = 1 << 3;
 	for (int i = 0; i < countOfChords - 1; i++){
-		nextChord();
 		chords.push_back(make_pair(Chord(getNoteFrequencyByIndex(tonicChord, currentChord.second),
 									currentChord.first), basicChordLength * i));
+		nextChord();
 	}
 	chords.push_back(make_pair(tonicChord, basicChordLength * (countOfChords - 1)));
 	
