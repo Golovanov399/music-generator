@@ -13,9 +13,14 @@ const int MAX_SECONDS_IN_BAR = 4.0;
 // track constants
 const int SAMPLE_RATE = 44100;
 
-// instrument comstants
+// instrument constants
 const double MAX_FREQUENCY = 10000.0;
 const int NUMBER_OF_INSTRUMENTS = 4;
+
+// note constants
+const double REAL_FREQUENCY = 440.0;
+const double MAX_AMPLITUDE = 100.0;
+const double MIN_AMPLITUDE = 0.0;
 
 //maximum and minimum constants of effects
 const double ECHO_MAX_DELAY = 1.0;

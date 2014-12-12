@@ -98,9 +98,9 @@ void Track::normalize()
 	for (int i = 0; i < (int)wave_.size(); i++)
 		if (fabs(wave_[i]) > mx) mx = fabs(wave_[i]);
 	std::cerr << "Maximum absolute value : " << mx << std::endl;
-	if (mx > MAX_AMPLITUDE - 1)
-		for (int i = 0; i < (int)wave_.size(); i++)
-			wave_[i] *= ((MAX_AMPLITUDE - 1)/ mx);
+	//if (mx > MAX_AMPLITUDE - 1)
+	for (int i = 0; i < (int)wave_.size(); i++)
+		wave_[i] *= ((MAX_AMPLITUDE - 1)/ mx);
 }
 
 void Track::drop(const char* outputFileName) const
