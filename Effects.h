@@ -50,4 +50,28 @@ public :
 	void applyEffect(Track &sample) const;
 };
 
+class Flanger : public Effect
+{
+	double frequency_;
+	double delay_;
+public :
+	Flanger(const double &start,
+		const double &duration,
+		const double &power,
+		const double &frequency,
+		const double &delay);
+	void applyEffect(Track &sample) const;
+};
+
+class Distortion : public Effect
+{
+	double level_;
+public :
+	Distortion(	const double &start,
+			const double &duration,
+			const double &power,
+			const double &level);
+	void applyEffect(Track &sample) const;
+};
+
 #endif

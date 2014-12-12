@@ -2,10 +2,7 @@
 
 #include <utility>
 #include <vector>
-
-const double REAL_FREQUENCY = 440.0;
-const double MAX_AMPLITUDE = 100.0;
-const double MIN_AMPLITUDE = 0.0;
+#include "CValues.h"
 
 enum Mode {MAJOR, MINOR};
 
