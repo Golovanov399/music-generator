@@ -214,6 +214,8 @@ vector<pair<Chord, double> > Generator2::generateChords(const Chord& tonicChord)
 		is a pair of a Chord and its appearance time
 	*/
 	vector<pair<Chord, double> > chords;
+
+	srand(time(NULL));
 	
 	int tonicFrequency = tonicChord.getNote().getFrequency();
 	pair<Mode, int> currentChord(MINOR, 1);
@@ -326,9 +328,6 @@ vector<pair<Note, double> > Generator2::generateMaintheme(AllChords) const{
 		}
 	}
 	sort(baseSequence.begin(), baseSequence.end());
-	
-	for (auto x : baseSequence)
-		cerr << x.first << " " << x.second << "\n";
 
 	for (int i = 0; i < chords.size(); i++){
 		for (int j = 0; j < baseSequence.size(); j++){
