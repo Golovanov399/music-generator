@@ -160,7 +160,7 @@ vector<pair<Chord, double> > Generator1::generateChords(const Chord& tonicChord)
 	return chords;
 }
 
-vector<pair<Note, double> > Generator1::generateAccompaniment(AllChords) const{
+vector<pair<Note, double> > Generator1::generateAccompaniment(const vector<pair<Chord, double> >& chords, const Chord& tonicChord) const{
 	vector<pair<Note, double> > accompaniment;
 	for (int i = 0; i < chords.size(); i++){
 		for (int j = 1; j <= 5; j += 2){
@@ -175,7 +175,7 @@ vector<pair<Note, double> > Generator1::generateAccompaniment(AllChords) const{
 	return accompaniment;
 }
 
-vector<pair<Note, double> > Generator1::generateMaintheme(AllChords) const{
+vector<pair<Note, double> > Generator1::generateMaintheme(const vector<pair<Chord, double> >& chords, const Chord& tonicChord) const{
 	vector<pair<Note, double> > maintheme;
 	
 	double baseVolume = MAX_AMPLITUDE / 4;
@@ -282,7 +282,7 @@ vector<pair<Chord, double> > Generator2::generateChords(const Chord& tonicChord)
 	return chords;
 }
 
-vector<pair<Note, double> > Generator2::generateAccompaniment(AllChords) const{
+vector<pair<Note, double> > Generator2::generateAccompaniment(const vector<pair<Chord, double> >& chords, const Chord& tonicChord) const{
 	vector<pair<Note, double> > accompaniment;
 	
 	for (int i = 0; i < chords.size(); i++){
@@ -310,7 +310,7 @@ vector<pair<Note, double> > Generator2::generateAccompaniment(AllChords) const{
 	return accompaniment;
 }
 
-vector<pair<Note, double> > Generator2::generateMaintheme(AllChords) const{
+vector<pair<Note, double> > Generator2::generateMaintheme(const vector<pair<Chord, double> >& chords, const Chord& tonicChord) const{
 	vector<pair<Note, double> > maintheme;
 
 	vector<pair<double, int> > baseSequence;
@@ -343,7 +343,7 @@ vector<pair<Note, double> > Generator2::generateMaintheme(AllChords) const{
 Melody Generator::generateMelody() const{
 	Chord tonicChord(getNoteFrequency("A"), MINOR);
 	vector<pair<Chord, double> > chords = generateChords(tonicChord);
-	vector<pair<Note, double> > accompaniment = generateAccompaniment(allChords);
-	vector<pair<Note, double> > maintheme = generateMaintheme(allChords);	
+	vector<pair<Note, double> > accompaniment = generateAccompaniment(chords, tonicChord);
+	vector<pair<Note, double> > maintheme = generateMaintheme(chords, tonicChord);	
 	return Melody(accompaniment, maintheme, MIN_SECONDS_IN_BAR + rand() * (MAX_SECONDS_IN_BAR - MIN_SECONDS_IN_BAR) / RAND_MAX);
 }
