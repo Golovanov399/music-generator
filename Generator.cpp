@@ -26,22 +26,29 @@ int generator::getNoteFrequency(const string& noteName, int octave = 0) {
 	switch (noteName[0]){
 		case 'C':
 			currentFrequency = 0;
+			break;
       // FixMe: no breaks!
 		case 'D':
 			currentFrequency = 2;
+			break;
 		case 'E':
 			currentFrequency = 4;
+			break;
 		case 'F':
 			currentFrequency = 5;
+			break;
 		case 'G':
 			currentFrequency = 7;
+			break;
 		case 'A':
 			currentFrequency = 9;
+			break;
 		case 'B':
 			currentFrequency = 10;
-		case 'H':
+			break;
+		default:
 			currentFrequency = 11;
-    // FixMe: default?
+			break;
 	}
 	if (noteName.length() > 1){
 		if (noteName[1] == '#'){
@@ -70,6 +77,7 @@ int generator::getNoteFrequencyByIndex(const Chord& tonicChord, int index){
 	}
 	int baseFrequency = tonicChord.getNote().getFrequency() + octave * 12;
   // FixMe: do not use switches for this
+	//later
 	if (tonicChord.getMode() == MAJOR){
 		switch(index){
 			case 1:
@@ -206,20 +214,69 @@ vector<pair<Chord, double> > Generator2::generateChords(const Chord& tonicChord)
 		is a pair of a Chord and its appearance time
 	*/
 	vector<pair<Chord, double> > chords;
+	
 	int tonicFrequency = tonicChord.getNote().getFrequency();
-	srand(time(NULL));
-	int count = 1 << (rand() % 2 + 1);  // FixMe: too complicated	//ur mom is too complicated
-	double chordLength = basicChordLength;
-	vector<Chord> combo;
-	combo.push_back(Chord(getNoteFrequencyByIndex(tonicChord, 1), MINOR));
-	combo.push_back(Chord(getNoteFrequencyByIndex(tonicChord, -1), MAJOR));
-	combo.push_back(Chord(getNoteFrequencyByIndex(tonicChord, 3), MAJOR));
-	combo.push_back(Chord(getNoteFrequencyByIndex(tonicChord, 7), MAJOR));
-	for (int i = 0; i < count; i++){
-		for (int j = 0; j < combo.size(); j++){
-			chords.push_back(make_pair(combo[j], (combo.size() * i + j) * chordLength));
+	pair<Mode, int> currentChord(MINOR, 1);
+	auto nextChord = [&](){
+		if (currentChord.first == MINOR){
+			switch (currentChord.second){
+				case 1:
+					currentChord = vector<pair<Mode, int>>{make_pair(MAJOR, 3), make_pair(MAJOR, 5), make_pair(MAJOR, 6)}[rand() % 3];
+					break;
+				case 2:
+					currentChord = vector<pair<Mode, int>>{make_pair(MAJOR, 4)}[rand() % 1];
+					break;
+				case 3:
+					currentChord = vector<pair<Mode, int>>{make_pair(MAJOR, 5)}[rand() % 1];
+					break;
+				case 4:
+					currentChord = vector<pair<Mode, int>>{make_pair(MAJOR, 6), make_pair(MAJOR, 7), make_pair(MINOR, 1), make_pair(MAJOR, 3)}[rand() % 4];
+					break;
+				case 5:
+					currentChord = vector<pair<Mode, int>>{make_pair(MAJOR, 7), make_pair(MINOR, 4), make_pair(MAJOR, 6)}[rand() % 3];
+					break;
+				case 6:
+					currentChord = vector<pair<Mode, int>>{make_pair(MAJOR, 2)}[rand() % 1];
+					break;
+				default:
+					currentChord = vector<pair<Mode, int>>{make_pair(MAJOR, 2), make_pair(MAJOR, 6), make_pair(MINOR, 3)}[rand() % 3];
+					break;
+			}
+		} else {
+			switch (currentChord.second){
+				case 1:
+					currentChord = vector<pair<Mode, int>>{make_pair(MINOR, 6), make_pair(MAJOR, 5), make_pair(MINOR, 1)}[rand() % 3];
+					break;
+				case 2:
+					currentChord = vector<pair<Mode, int>>{make_pair(MINOR, 1)}[rand() % 1];
+					break;
+				case 3:
+					currentChord = vector<pair<Mode, int>>{make_pair(MINOR, 1), make_pair(MAJOR, 4), make_pair(MAJOR, 6), make_pair(MAJOR, 7)}[rand() % 4];
+					break;
+				case 4:
+					currentChord = vector<pair<Mode, int>>{make_pair(MAJOR, 1)}[rand() % 1];
+					break;
+				case 5:
+					currentChord = vector<pair<Mode, int>>{make_pair(MINOR, 1), make_pair(MAJOR, 6)}[rand() % 2];
+					break;
+				case 6:
+					currentChord = vector<pair<Mode, int>>{make_pair(MINOR, 4), make_pair(MAJOR, 5), make_pair(MAJOR, 7)}[rand() % 3];
+					break;
+				default:
+					currentChord = vector<pair<Mode, int>>{make_pair(MAJOR, 6), make_pair(MINOR, 5), make_pair(MAJOR, 3)}[rand() % 3];
+					break;
+			}
 		}
+	};
+
+	int countOfChords = 1 << 3;
+	for (int i = 0; i < countOfChords - 1; i++){
+		nextChord();
+		chords.push_back(make_pair(Chord(getNoteFrequencyByIndex(tonicChord, currentChord.second),
+									currentChord.first), basicChordLength * i));
 	}
+	chords.push_back(make_pair(tonicChord, basicChordLength * (countOfChords - 1)));
+	
 	return chords;
 }
 
@@ -227,13 +284,25 @@ vector<pair<Note, double> > Generator2::generateAccompaniment(AllChords) const{
 	vector<pair<Note, double> > accompaniment;
 	
 	for (int i = 0; i < chords.size(); i++){
-		for (int j = 1; j <= 5; j += 2){
-			accompaniment.push_back(make_pair(Note(getNoteFrequencyByIndex(chords[i].first, j), basicChordLength), chords[i].second));
-		}
-	}
-
-	for (int i = 0; i < accompaniment.size(); i++){
-		accompaniment[i].first.setVolume(accompaniment[i].first.getVolume() / 3);
+		accompaniment.push_back(make_pair(Note(getNoteFrequencyByIndex(chords[i].first, 1), basicChordLength / 8), chords[i].second));
+		accompaniment.push_back(make_pair(Note(getNoteFrequencyByIndex(chords[i].first, 3), basicChordLength / 8), chords[i].second
+																										+ basicChordLength * 0.125));
+		accompaniment.push_back(make_pair(Note(getNoteFrequencyByIndex(chords[i].first, 5), basicChordLength / 8), chords[i].second
+																										+ basicChordLength * 0.25));
+		accompaniment.push_back(make_pair(Note(getNoteFrequencyByIndex(chords[i].first, 3), basicChordLength / 8), chords[i].second
+																										+ basicChordLength * 0.375));
+		accompaniment.push_back(make_pair(Note(getNoteFrequencyByIndex(chords[i].first, 3), basicChordLength / 8), chords[i].second
+																										+ basicChordLength * 0.5));
+		accompaniment.push_back(make_pair(Note(getNoteFrequencyByIndex(chords[i].first, 5), basicChordLength / 8), chords[i].second
+																										+ basicChordLength * 0.5));
+		accompaniment.push_back(make_pair(Note(getNoteFrequencyByIndex(chords[i].first, 8), basicChordLength / 8), chords[i].second
+																										+ basicChordLength * 0.5));
+		accompaniment.push_back(make_pair(Note(getNoteFrequencyByIndex(chords[i].first, 5), basicChordLength / 8), chords[i].second
+																										+ basicChordLength * 0.625));
+		accompaniment.push_back(make_pair(Note(getNoteFrequencyByIndex(chords[i].first, 3), basicChordLength / 8), chords[i].second
+																										+ basicChordLength * 0.75));
+		accompaniment.push_back(make_pair(Note(getNoteFrequencyByIndex(chords[i].first, 5), basicChordLength / 8), chords[i].second
+																										+ basicChordLength * 0.875));
 	}
 
 	return accompaniment;
